@@ -3,9 +3,9 @@ import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { es } from 'date-fns/locale';
 import { format } from 'date-fns';
-import BookingForm from './BookingForm'; // 👈 1. Importamos el nuevo formulario
+import BookingForm from './BookingForm';
 
-// ... (Las interfaces Service y Props no cambian) ...
+// Interfaces para los tipos de datos
 interface Service {
   id: string;
   name: string;
@@ -13,20 +13,28 @@ interface Service {
   price: number;
 }
 
+interface Professional {
+  id: string;
+  displayName: string;
+  title: string;
+  photoURL?: string;
+}
+
 interface Props {
-  professionalId: string | undefined;
+  professional: Professional;
   services: Service[];
 }
 
-export default function Scheduler({ professionalId, services }: Props) {
+export default function Scheduler({ professional, services }: Props) {
+  // --- Estados del componente (Lógica sin cambios) ---
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined);
   const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
   const [availableSlots, setAvailableSlots] = useState<Date[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [bookingSuccess, setBookingSuccess] = useState(false); // 👈 2. Nuevo estado para el mensaje de éxito
+  const [bookingSuccess, setBookingSuccess] = useState(false);
 
-  // ... (El useEffect para fetchAvailability no cambia) ...
+  // --- Lógica para buscar horarios (Sin cambios) ---
   useEffect(() => {
     if (!selectedDay || !selectedService) {
       setAvailableSlots([]);
@@ -42,7 +50,7 @@ export default function Scheduler({ professionalId, services }: Props) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             date: selectedDay.toISOString(),
-            professionalId: professionalId,
+            professionalId: professional.id,
             serviceId: selectedService.id,
           }),
         });
@@ -56,61 +64,73 @@ export default function Scheduler({ professionalId, services }: Props) {
       }
     };
     fetchAvailability();
-  }, [selectedDay, selectedService]);
+  }, [selectedDay, selectedService, professional.id]);
 
+  // --- Manejadores de eventos (Sin cambios) ---
   const handleSelectService = (service: Service | null) => {
     setSelectedService(service);
     setSelectedDay(undefined);
     setSelectedSlot(null);
-    setBookingSuccess(false); // 👈 3. Reseteamos el estado de éxito al cambiar de servicio
+    setBookingSuccess(false);
   };
-  
-  const handleDaySelect = (date: Date | undefined) => {
-    if (date) {
-      setSelectedDay(date);
-      setBookingSuccess(false); // Reseteamos por si el usuario cambia de día
-    }
-  };
+  const handleDaySelect = (date: Date | undefined) => { if (date) { setSelectedDay(date); setBookingSuccess(false); } };
+  const handleSlotSelect = (slot: Date) => { setSelectedSlot(slot); setBookingSuccess(false); };
+  const handleBookingSuccess = () => { setBookingSuccess(true); };
 
-  const handleSlotSelect = (slot: Date) => {
-    setSelectedSlot(slot);
-    setBookingSuccess(false); // Reseteamos por si el usuario cambia de horario
-  };
-
-  // 👈 4. Función que se llamará desde BookingForm cuando la reserva sea exitosa
-  const handleBookingSuccess = () => {
-    setBookingSuccess(true);
-  };
-
-  // Si la reserva fue exitosa, mostramos un mensaje y terminamos.
+  // --- Vista de Éxito (Sin cambios) ---
   if (bookingSuccess) {
     return (
-      <div className="mt-12 text-center p-8 bg-green-50 border border-green-200 rounded-lg">
+      <div className="text-center p-8 bg-green-50 border border-green-200 rounded-lg">
         <h2 className="text-2xl font-bold text-green-700">¡Cita Agendada!</h2>
-        <p className="mt-2 text-gray-600">
-          Tu solicitud ha sido enviada correctamente. Recibirás un correo electrónico con la confirmación.
-        </p>
+        <p className="mt-2 text-gray-600">Tu solicitud ha sido enviada. Recibirás una confirmación por correo.</p>
       </div>
     );
   }
 
+  // --- RENDERIZADO DEL COMPONENTE (CON NUEVO DISEÑO) ---
   return (
-    <div className="mt-12">
-      {/* SECCIÓN 1: SELECCIÓN DE SERVICIO (Sin cambios) */}
+    <div className="w-full">
+      {/* Encabezado Morado */}
+      <header className="bg-primary-700 p-5 flex items-center gap-4 rounded-xl -mx-10 -mt-10 mb-8 relative overflow-hidden">
+        {/* Círculos decorativos del fondo */}
+        <div className="absolute -top-4 -right-4 w-20 h-20 bg-white/10 rounded-full"></div>
+        <div className="absolute -bottom-8 -right-2 w-24 h-24 bg-white/5 rounded-full"></div>
+        
+        <img 
+          src={professional.photoURL || '/doctor-placeholder.svg'}
+          alt={`Foto de ${professional.displayName}`}
+          className="w-16 h-16 rounded-full border-2 border-white object-cover shadow-lg"
+        />
+        <div>
+          <h1 className="text-xl font-bold text-white tracking-tight">{professional.displayName}</h1>
+          <p className="text-sm text-primary-200">{professional.title}</p>
+        </div>
+      </header>
+
+      {/* Vista condicional: O se muestra la lista de servicios, o el calendario */}
       {!selectedService ? (
         <>
-          <h2 className="text-2xl font-bold text-gray-700 mb-2">1. Selecciona un servicio</h2>
-          <p className="text-gray-500 mb-6">Elige uno de los servicios a continuación para ver los horarios disponibles.</p>
-          <div className="space-y-4">
+          {/* Título del Paso 1 */}
+          <div className="mb-6">
+            <h2 className="text-lg font-bold text-gray-800">1. Selecciona un servicio</h2>
+            <p className="text-sm text-gray-500 mt-1">Elige uno para ver los horarios disponibles.</p>
+          </div>
+          
+          {/* Lista de Servicios */}
+          <div className="space-y-3">
             {services.map(service => (
-              <div key={service.id} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex justify-between items-center">
+              <div key={service.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex justify-between items-center">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800">{service.name}</h3>
-                  <p className="text-sm text-gray-500">{service.duration} minutos · ${service.price.toLocaleString('es-CL')}</p>
+                  <p className="text-xs text-gray-400 font-medium">Servicio</p>
+                  <h3 className="font-bold text-gray-800">{service.name}</h3>
+                  <p className="text-sm text-gray-500 mt-1">{service.duration} minutos</p>
+                  <p className="text-sm font-semibold text-primary-700 mt-1">
+                    {service.price > 0 ? `$${service.price.toLocaleString('es-CL')}` : 'Sin costo'}
+                  </p>
                 </div>
                 <button 
                   onClick={() => handleSelectService(service)}
-                  className="bg-purple-100 text-purple-700 font-semibold px-4 py-2 rounded-lg hover:bg-purple-200 transition-colors"
+                  className="bg-primary-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors shadow-sm"
                 >
                   Elegir
                 </button>
@@ -120,47 +140,8 @@ export default function Scheduler({ professionalId, services }: Props) {
         </>
       ) : (
         <div>
-          {/* SECCIÓN 2: CALENDARIO Y HORARIOS (Sin cambios) */}
-          <h2 className="text-2xl font-bold text-gray-700 mb-2">2. Elige un día y una hora</h2>
-          <div className="flex justify-between items-center bg-gray-50 p-4 rounded-md">
-            <p className="text-gray-700">Servicio seleccionado: <span className="font-semibold">{selectedService.name}</span></p>
-            <button onClick={() => handleSelectService(null)} className="text-sm text-purple-600 hover:underline font-semibold">Cambiar servicio</button>
-          </div>
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex justify-center">
-              <DayPicker
-                mode="single" selected={selectedDay} onSelect={handleDaySelect}
-                locale={es} fromDate={new Date()}
-                styles={{ head_cell: { width: '40px' }, caption_label: { fontSize: '1.1rem', fontWeight: 'bold' } }}
-              />
-            </div>
-            <div className="h-full">
-              {selectedDay && (<p className="text-center font-semibold text-gray-800">Horarios para el {format(selectedDay, "eeee, d 'de' MMMM", { locale: es })}</p>)}
-              <div className="mt-4 p-2 border rounded-lg h-80 overflow-y-auto">
-                {isLoading && <p className="text-gray-400 text-center pt-4">Buscando horarios...</p>}
-                {!isLoading && availableSlots.length === 0 && (<p className="text-gray-400 text-center pt-4">{selectedDay ? "No hay horarios disponibles para este día." : "Selecciona un día para ver los horarios."}</p>)}
-                <div className="grid grid-cols-3 gap-2 p-2">
-                  {!isLoading && availableSlots.map((slot, index) => (
-                    <button key={index} onClick={() => handleSlotSelect(slot)}
-                      className={`p-2 rounded-md text-center font-semibold transition-colors ${selectedSlot?.getTime() === slot.getTime() ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'}`}
-                    >
-                      {format(slot, 'HH:mm')}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 👇 5. AQUÍ ESTÁ EL CAMBIO: Reemplazamos el placeholder por el componente BookingForm */}
-          {selectedSlot && (
-            <BookingForm
-              professionalId={professionalId!}
-              selectedService={selectedService}
-              selectedSlot={selectedSlot}
-              onBookingSuccess={handleBookingSuccess}
-            />
-          )}
+          {/* Dejamos esto listo para el siguiente paso */}
+          <p>Calendario y formulario irán aquí...</p>
         </div>
       )}
     </div>

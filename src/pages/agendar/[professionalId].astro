@@ -1,29 +1,25 @@
 ---
 export const prerender = false;
-
 import Layout from '../../layouts/Layout.astro';
 import { db } from '../../firebase/client';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import Scheduler from '../../components/Scheduler.tsx';
+import Scheduler from '../../components/Scheduler';
 import type { DocumentData } from 'firebase/firestore';
 
-// 1. Obtener el ID del profesional desde la URL
 const { professionalId } = Astro.params;
 
-// 2. Función para obtener los datos desde Firestore
+// Esta función no cambia
 async function getProfessionalData(id: any) {
   if (!id) return { professional: null, services: [] };
 
-  // Obtener el documento del profesional
   const profDocRef = doc(db, 'professionals', id);
   const profDocSnap = await getDoc(profDocRef);
   const professional = profDocSnap.exists() ? profDocSnap.data() : null;
 
-  // Obtener los servicios asociados a ese profesional
   const servicesQuery = query(collection(db, 'services'), where('professionalId', '==', id));
   const servicesSnapshot = await getDocs(servicesQuery);
   const services = servicesSnapshot.docs.map(doc => {
-    const data = doc.data() as DocumentData; // Le decimos a TS que data es un documento de Firestore
+    const data = doc.data() as DocumentData;
     return {
       id: doc.id,
       name: data.name,
@@ -31,14 +27,12 @@ async function getProfessionalData(id: any) {
       price: data.price
     };
   });
-  
 
   return { professional, services };
 }
 
 const { professional, services } = await getProfessionalData(professionalId);
 
-// Si no se encuentra al profesional, podemos mostrar una página 404
 if (!professional) {
   return new Response(null, {
     status: 404,
@@ -47,31 +41,17 @@ if (!professional) {
 }
 ---
 
-<Layout title={`Agenda de ${professional.displayName}`}>
-  <main class="max-w-4xl mx-auto p-4 md:p-8">
-    
-    <div class="flex flex-col md:flex-row items-center gap-6 md:gap-8 bg-white p-8 rounded-2xl shadow-md">
-      <img 
-        class="w-32 h-32 rounded-full object-cover border-4 border-purple-200"
-        src="/doctor-placeholder.svg" 
-        alt={`Foto de ${professional.displayName}`}
-      />
-      <div class="text-center md:text-left">
-        <h1 class="text-4xl font-bold text-gray-800">{professional.displayName}</h1>
-        <p class="text-xl text-purple-600 mt-1">{professional.title}</p>
-        {professional.address && (
-          <p class="text-gray-500 mt-2 flex items-center justify-center md:justify-start gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
-            {professional.address}
-          </p>
-        )}
-      </div>
-    </div>
-
-    <Scheduler 
-      client:load
-      professionalId={professionalId} 
-      services={services} 
-    />
-  </main>
+<Layout title={`Agendar con ${professional.displayName}`}>
+  {/* 👇 AQUÍ ESTÁ LA CORRECCIÓN CLAVE 👇 */}
+  {/* Construimos el objeto 'professional' con todos los campos que el componente espera. */}
+  <Scheduler 
+    client:load
+    professional={{
+      id: professionalId!,
+      displayName: professional.displayName,
+      title: professional.title,
+      photoURL: professional.photoURL
+    }}
+    services={services} 
+  />
 </Layout>

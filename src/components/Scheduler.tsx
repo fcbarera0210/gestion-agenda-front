@@ -5,9 +5,7 @@ import { es } from 'date-fns/locale';
 import { format } from 'date-fns';
 import BookingForm from './BookingForm';
 
-/**
- * Data structure representing a service that can be booked
- */
+// Tipos de datos
 interface Service {
   id: string;
   name: string;
@@ -15,9 +13,6 @@ interface Service {
   price: number;
 }
 
-/**
- * Basic info for a professional offering services
- */
 interface Professional {
   id: string;
   displayName: string;
@@ -31,10 +26,10 @@ interface Props {
 }
 
 /**
- * Main scheduler component that guides the user through choosing a service, date and time
+ * Componente principal del agendador: selección de servicio, fecha y hora.
  */
 export default function Scheduler({ professional, services }: Props) {
-  // Track current selections and request state
+  // Estados
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined);
   const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
@@ -42,7 +37,7 @@ export default function Scheduler({ professional, services }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
 
-  // Retrieve available time slots whenever day or service changes
+  // Buscar disponibilidad cuando cambia día o servicio
   useEffect(() => {
     if (!selectedDay || !selectedService) {
       setAvailableSlots([]);
@@ -64,7 +59,7 @@ export default function Scheduler({ professional, services }: Props) {
         });
         if (!response.ok) throw new Error('Error al buscar disponibilidad');
         const slots: string[] = await response.json();
-        setAvailableSlots(slots.map(slot => new Date(slot)));
+        setAvailableSlots(slots.map((slot) => new Date(slot)));
       } catch (error) {
         console.error(error);
       } finally {
@@ -74,7 +69,7 @@ export default function Scheduler({ professional, services }: Props) {
     fetchAvailability();
   }, [selectedDay, selectedService, professional.id]);
 
-  // Handle user selections
+  // Manejadores
   const handleSelectService = (service: Service | null) => {
     setSelectedService(service);
     setSelectedDay(undefined);
@@ -98,7 +93,7 @@ export default function Scheduler({ professional, services }: Props) {
     setBookingSuccess(true);
   };
 
-  // Display success message after booking
+  // Vista de éxito
   if (bookingSuccess) {
     return (
       <div className="text-center p-8 bg-green-50 border border-green-200 rounded-lg">
@@ -110,10 +105,10 @@ export default function Scheduler({ professional, services }: Props) {
     );
   }
 
-  // Render scheduler interface
+  // Render principal
   return (
     <div className="w-full">
-      {/* Professional header */}
+      {/* Encabezado del profesional */}
       <header className="flex items-center gap-4 mb-8">
         <img
           src={professional.photoURL || '/doctor-placeholder.svg'}
@@ -126,7 +121,7 @@ export default function Scheduler({ professional, services }: Props) {
         </div>
       </header>
 
-      {/* Step 1: Service selection */}
+      {/* Paso 1: Selección de servicio */}
       {!selectedService ? (
         <>
           <div className="mb-6">
@@ -134,7 +129,7 @@ export default function Scheduler({ professional, services }: Props) {
             <p className="text-gray-500 mt-1">Selecciona uno para ver los horarios disponibles.</p>
           </div>
           <div className="space-y-3">
-            {services.map(service => (
+            {services.map((service) => (
               <div
                 key={service.id}
                 className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex justify-between items-center transition-all hover:shadow-md hover:border-primary-300"
@@ -160,13 +155,13 @@ export default function Scheduler({ professional, services }: Props) {
           </div>
         </>
       ) : (
-        // Steps 2 and 3: Calendar and booking form
+        // Pasos 2 y 3: Calendario y formulario
         <div>
           <div className="mb-6">
             <h2 className="text-xl font-bold text-gray-800">2. Elige fecha y hora</h2>
           </div>
 
-          {/* Selected service summary */}
+          {/* Resumen del servicio seleccionado */}
           <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg border mb-6">
             <div>
               <p className="text-xs text-gray-500">Servicio seleccionado</p>
@@ -180,7 +175,7 @@ export default function Scheduler({ professional, services }: Props) {
             </button>
           </div>
 
-          {/* Calendar and available time slots */}
+          {/* Calendario y horarios */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-200 flex justify-center">
               <DayPicker
@@ -200,9 +195,11 @@ export default function Scheduler({ professional, services }: Props) {
                   head_row: 'flex',
                   head_cell: 'text-gray-500 rounded-md w-9 font-normal text-[0.8rem]',
                   row: 'flex w-full mt-2',
-                  cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-primary-50 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                  cell:
+                    'h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-primary-50 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
                   day: 'h-9 w-9 p-0 font-normal aria-selected:opacity-100',
-                  day_selected: 'bg-primary-700 text-white hover:bg-primary-700 hover:text-white focus:bg-primary-700 focus:text-white rounded-md',
+                  day_selected:
+                    'bg-primary-700 text-white hover:bg-primary-700 hover:text-white focus:bg-primary-700 focus:text-white rounded-md',
                   day_today: 'bg-gray-100 text-gray-900',
                   day_outside: 'text-gray-400 opacity-50',
                   day_disabled: 'text-gray-400 opacity-50',
@@ -217,7 +214,9 @@ export default function Scheduler({ professional, services }: Props) {
                 </p>
               )}
               <div className="p-2 border rounded-lg h-72 overflow-y-auto bg-gray-50">
-                {isLoading && <p className="text-gray-400 text-center pt-4 animate-pulse">Buscando...</p>}
+                {isLoading && (
+                  <p className="text-gray-400 text-center pt-4 animate-pulse">Buscando...</p>
+                )}
                 {!isLoading && availableSlots.length === 0 && (
                   <p className="text-gray-400 text-center pt-4">
                     {selectedDay ? 'No hay horarios disponibles.' : 'Selecciona un día.'}
@@ -243,7 +242,7 @@ export default function Scheduler({ professional, services }: Props) {
             </div>
           </div>
 
-          {/* Booking form */}
+          {/* Formulario de reserva */}
           {selectedSlot && (
             <BookingForm
               professionalId={professional.id}
@@ -257,4 +256,3 @@ export default function Scheduler({ professional, services }: Props) {
     </div>
   );
 }
-

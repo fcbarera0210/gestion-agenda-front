@@ -21,12 +21,13 @@ export default function BookingForm({ professionalId, selectedService, selectedS
     clientName: '',
     clientEmail: '',
     clientPhone: '',
+    notes: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   // Update local form state when an input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -57,7 +58,8 @@ export default function BookingForm({ professionalId, selectedService, selectedS
         clientEmail: formData.clientEmail,
         clientPhone: formData.clientPhone,
         serviceName: selectedService.name,
-        serviceDuration: selectedService.duration
+        serviceDuration: selectedService.duration,
+        notes: formData.notes
       });
       
       await createBooking({
@@ -68,7 +70,8 @@ export default function BookingForm({ professionalId, selectedService, selectedS
         clientEmail: formData.clientEmail,
         clientPhone: formData.clientPhone,
         serviceName: selectedService.name,
-        serviceDuration: selectedService.duration
+        serviceDuration: selectedService.duration,
+        notes: formData.notes
       });
       
       onBookingSuccess();
@@ -84,7 +87,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
   return (
     <div className="mt-8 pt-6 border-t">
       <h2 className="text-2xl font-bold text-gray-700 mb-2">3. Confirma tus datos</h2>
-      <div className="p-6 border rounded-lg bg-white mt-4">
+      <div className="p-6 border rounded-xl bg-white mt-4">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="clientName" className="text-sm font-medium text-gray-700">Nombre y Apellido</label>
@@ -100,9 +103,13 @@ export default function BookingForm({ professionalId, selectedService, selectedS
               <input type="tel" name="clientPhone" id="clientPhone" value={formData.clientPhone} onChange={handleChange} className="w-full px-4 py-3 mt-1 text-gray-700 bg-gray-100 rounded-lg" />
             </div>
           </div>
+          <div>
+            <label htmlFor="notes" className="text-sm font-medium text-gray-700">Notas</label>
+            <textarea name="notes" id="notes" rows={3} value={formData.notes} onChange={handleChange} className="w-full px-4 py-3 mt-1 text-gray-700 bg-gray-100 rounded-lg"></textarea>
+          </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="flex justify-end pt-4">
-            <button type="submit" disabled={isLoading} className="flex items-center justify-center w-48 px-6 py-3 font-semibold text-white rounded-lg shadow-md bg-purple-600 hover:bg-purple-700 disabled:bg-purple-300">
+            <button type="submit" disabled={isLoading} className="flex items-center justify-center w-48 px-6 py-3 font-semibold text-white rounded-lg shadow-md bg-primary-700 hover:bg-primary-400 disabled:bg-primary-400/50">
               {isLoading ? 'Agendando...' : 'Realizar Reserva'}
             </button>
           </div>

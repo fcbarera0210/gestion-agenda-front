@@ -5,7 +5,7 @@ import { es } from 'date-fns/locale';
 import { format } from 'date-fns';
 import BookingForm from './BookingForm';
 
-// Interfaces para los tipos de datos
+// Types for services and professionals handled by the scheduler
 interface Service {
   id: string;
   name: string;
@@ -25,8 +25,9 @@ interface Props {
   services: Service[];
 }
 
+// Component that guides the user through selecting a service, date and time
 export default function Scheduler({ professional, services }: Props) {
-  // --- Estados del componente (Lógica sin cambios) ---
+  // Track selections and booking status
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined);
   const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
@@ -34,7 +35,7 @@ export default function Scheduler({ professional, services }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
 
-  // --- Lógica para buscar horarios (Sin cambios) ---
+  // Fetch availability when user selects a new day or service
   useEffect(() => {
     if (!selectedDay || !selectedService) {
       setAvailableSlots([]);
@@ -66,7 +67,7 @@ export default function Scheduler({ professional, services }: Props) {
     fetchAvailability();
   }, [selectedDay, selectedService, professional.id]);
 
-  // --- Manejadores de eventos (Sin cambios) ---
+  // Handlers for user interactions
   const handleSelectService = (service: Service | null) => {
     setSelectedService(service);
     setSelectedDay(undefined);
@@ -77,7 +78,7 @@ export default function Scheduler({ professional, services }: Props) {
   const handleSlotSelect = (slot: Date) => { setSelectedSlot(slot); setBookingSuccess(false); };
   const handleBookingSuccess = () => { setBookingSuccess(true); };
 
-  // --- Vista de Éxito (Sin cambios) ---
+  // Show confirmation when booking is completed
   if (bookingSuccess) {
     return (
       <div className="text-center p-8 bg-green-50 border border-green-200 rounded-lg">
@@ -87,16 +88,14 @@ export default function Scheduler({ professional, services }: Props) {
     );
   }
 
-  // --- RENDERIZADO DEL COMPONENTE (CON NUEVO DISEÑO) ---
+  // Render scheduler interface
   return (
     <div className="w-full">
-      {/* Encabezado Morado */}
       <header className="bg-primary-700 p-5 flex items-center gap-4 rounded-xl -mx-10 -mt-10 mb-8 relative overflow-hidden">
-        {/* Círculos decorativos del fondo */}
         <div className="absolute -top-4 -right-4 w-20 h-20 bg-white/10 rounded-full"></div>
         <div className="absolute -bottom-8 -right-2 w-24 h-24 bg-white/5 rounded-full"></div>
-        
-        <img 
+
+        <img
           src={professional.photoURL || '/doctor-placeholder.svg'}
           alt={`Foto de ${professional.displayName}`}
           className="w-16 h-16 rounded-full border-2 border-white object-cover shadow-lg"
@@ -107,16 +106,13 @@ export default function Scheduler({ professional, services }: Props) {
         </div>
       </header>
 
-      {/* Vista condicional: O se muestra la lista de servicios, o el calendario */}
       {!selectedService ? (
         <>
-          {/* Título del Paso 1 */}
           <div className="mb-6">
             <h2 className="text-lg font-bold text-gray-800">1. Selecciona un servicio</h2>
             <p className="text-sm text-gray-500 mt-1">Elige uno para ver los horarios disponibles.</p>
           </div>
-          
-          {/* Lista de Servicios */}
+
           <div className="space-y-3">
             {services.map(service => (
               <div key={service.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex justify-between items-center">
@@ -128,7 +124,7 @@ export default function Scheduler({ professional, services }: Props) {
                     {service.price > 0 ? `$${service.price.toLocaleString('es-CL')}` : 'Sin costo'}
                   </p>
                 </div>
-                <button 
+                <button
                   onClick={() => handleSelectService(service)}
                   className="bg-primary-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors shadow-sm"
                 >
@@ -140,7 +136,6 @@ export default function Scheduler({ professional, services }: Props) {
         </>
       ) : (
         <div>
-          {/* Dejamos esto listo para el siguiente paso */}
           <p>Calendario y formulario irán aquí...</p>
         </div>
       )}

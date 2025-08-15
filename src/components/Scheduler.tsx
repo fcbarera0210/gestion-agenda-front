@@ -124,18 +124,18 @@ export default function Scheduler({ professional, services }: Props) {
       {/* Paso 1: Selección de servicio */}
       {!selectedService ? (
         <>
-          <div className="mb-6">
-            <h2 className="text-xl font-bold text-gray-800">Escoge un servicio</h2>
-            <p className="text-gray-500 mt-1">Selecciona uno para ver los horarios disponibles.</p>
-          </div>
-          <div className="space-y-3">
-            {services.map((service) => (
-              <div
-                key={service.id}
-                className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 flex justify-between items-center transition-all hover:shadow-md hover:border-primary-300"
-              >
-                <div>
-                  <h3 className="font-semibold text-gray-900">{service.name}</h3>
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-800">1. Selecciona un servicio</h2>
+              <p className="text-gray-500 mt-1">Elige uno para ver los horarios disponibles.</p>
+            </div>
+            <div className="space-y-4">
+              {services.map((service) => (
+                <div
+                  key={service.id}
+                  className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex justify-between items-center transition hover:shadow-md hover:border-primary-300"
+                >
+                  <div>
+                    <h3 className="font-semibold text-gray-900">{service.name}</h3>
                   <div className="flex items-center gap-x-4 text-sm text-gray-500 mt-1">
                     <span>{service.duration} min</span>
                     <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
@@ -144,17 +144,17 @@ export default function Scheduler({ professional, services }: Props) {
                     </span>
                   </div>
                 </div>
-                <button
-                  onClick={() => handleSelectService(service)}
-                  className="bg-primary-50 text-primary-700 font-semibold px-5 py-2 rounded-lg hover:bg-primary-100 transition-colors"
-                >
-                  Agendar
-                </button>
-              </div>
-            ))}
-          </div>
-        </>
-      ) : (
+                  <button
+                    onClick={() => handleSelectService(service)}
+                    className="bg-primary-50 text-primary-700 font-semibold px-5 py-2 rounded-lg hover:bg-primary-100 transition-colors"
+                  >
+                    Elegir
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
         // Pasos 2 y 3: Calendario y formulario
         <div>
           <div className="mb-6">

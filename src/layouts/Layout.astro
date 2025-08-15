@@ -8,8 +8,8 @@ photoURL?: string;
 }
 
 interface Props {
-title: string;
-professional: Professional;
+  title: string;
+  professional?: Professional;
 }
 
 const { title, professional } = Astro.props;
@@ -29,14 +29,14 @@ const { title, professional } = Astro.props;
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
         </head>
-        <body class="bg-gray-100 font-sans text-gray-800">
+        <body>
                 <div class="flex items-center justify-center min-h-screen">
-                        <div class="w-full max-w-md bg-white rounded-2xl shadow-lg overflow-hidden m-4">
-                                <header class="bg-primary-700 text-white p-6 flex items-center gap-4">
-                                        <img src={professional.photoURL || '/avatar.svg'} alt={`Foto de ${professional.displayName}`} class="w-16 h-16 rounded-full object-cover border-4 border-white" />
+                        <div class="w-full max-w-md bg-card rounded-2xl shadow-lg overflow-hidden m-4">
+                                <header class="bg-primary text-primary-foreground p-6 flex items-center gap-4">
+                                        <img src={professional?.photoURL || '/avatar.svg'} alt={`Foto de ${professional?.displayName || 'profesional'}`} class="w-16 h-16 rounded-full object-cover border-4 border-background" />
                                         <div>
-                                                <h1 class="text-xl font-bold">{professional.displayName}</h1>
-                                                <p class="text-sm">{professional.title}</p>
+                                                <h1 class="text-xl font-bold">{professional?.displayName}</h1>
+                                                <p class="text-sm">{professional?.title}</p>
                                         </div>
                                 </header>
                                 <div class="p-6">

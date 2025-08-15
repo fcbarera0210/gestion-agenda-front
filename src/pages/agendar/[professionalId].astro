@@ -43,7 +43,7 @@ if (!professional) {
 }
 ---
 
-<Layout title={`Agendar con ${professional.displayName}`}>
+<Layout title={`Agendar con ${professional.displayName}`} professional={professional}>
   <Scheduler
     client:load
     professional={{

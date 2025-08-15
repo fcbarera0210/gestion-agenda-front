@@ -125,28 +125,28 @@ export default function Scheduler({ professional, services }: Props) {
       {!selectedService ? (
         <>
             <div className="mb-6">
-              <h2 className="text-xl font-bold text-gray-800">1. Selecciona un servicio</h2>
-              <p className="text-gray-500 mt-1">Elige uno para ver los horarios disponibles.</p>
+              <h2 className="text-xl font-bold text-foreground">1. Selecciona un servicio</h2>
+              <p className="text-muted-foreground mt-1">Elige uno para ver los horarios disponibles.</p>
             </div>
             <div className="space-y-4">
               {services.map((service) => (
                 <div
                   key={service.id}
-                  className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex justify-between items-center transition hover:shadow-md hover:border-primary-400"
+                  className="bg-card p-4 rounded-xl shadow-sm border flex justify-between items-center transition hover:shadow-md hover:border-primary"
                 >
                   <div>
-                    <h3 className="font-semibold text-gray-900">{service.name}</h3>
-                  <div className="flex items-center gap-x-4 text-sm text-gray-500 mt-1">
+                    <h3 className="font-semibold text-foreground">{service.name}</h3>
+                  <div className="flex items-center gap-x-4 text-sm text-muted-foreground mt-1">
                     <span>{service.duration} min</span>
-                    <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                    <span className="font-medium text-gray-700">
+                    <span className="w-1 h-1 bg-muted-foreground rounded-full"></span>
+                    <span className="font-medium text-foreground">
                       {service.price > 0 ? `$${service.price.toLocaleString('es-CL')}` : 'Gratis'}
                     </span>
                   </div>
                 </div>
                   <button
                     onClick={() => handleSelectService(service)}
-                    className="bg-primary-700 text-white font-semibold px-5 py-2 rounded-lg hover:bg-primary-400 transition-colors"
+                    className="bg-primary text-primary-foreground font-semibold px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors"
                   >
                     Elegir
                   </button>
@@ -158,7 +158,7 @@ export default function Scheduler({ professional, services }: Props) {
         // Pasos 2 y 3: Calendario y formulario
         <div>
           <div className="mb-6">
-            <h2 className="text-xl font-bold text-gray-800">2. Elige un día y una hora</h2>
+            <h2 className="text-xl font-bold text-foreground">2. Elige un día y una hora</h2>
           </div>
 
           <div className="flex gap-2 mb-4">
@@ -168,8 +168,8 @@ export default function Scheduler({ professional, services }: Props) {
                 onClick={() => setSessionType(type as 'PRESENCIAL' | 'ONLINE')}
                 className={`px-4 py-2 rounded-lg border font-semibold ${
                   sessionType === type
-                    ? 'bg-primary-700 text-white border-primary-700'
-                    : 'bg-white text-primary-700 border-primary-700 hover:bg-primary-400 hover:text-white'
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
                 }`}
               >
                 {type}
@@ -178,14 +178,14 @@ export default function Scheduler({ professional, services }: Props) {
           </div>
 
           {/* Resumen del servicio seleccionado */}
-          <div className="flex justify-between items-center bg-gray-50 p-3 rounded-xl border mb-6">
+          <div className="flex justify-between items-center bg-muted p-3 rounded-xl border mb-6">
             <div>
-              <p className="text-xs text-gray-500">Servicio seleccionado</p>
-              <p className="font-semibold text-gray-800">{selectedService.name}</p>
+              <p className="text-xs text-muted-foreground">Servicio seleccionado</p>
+              <p className="font-semibold text-foreground">{selectedService.name}</p>
             </div>
             <button
               onClick={() => handleSelectService(null)}
-              className="text-sm text-primary-700 hover:underline font-semibold"
+              className="text-sm text-primary hover:underline font-semibold"
             >
               Cambiar
             </button>
@@ -193,7 +193,7 @@ export default function Scheduler({ professional, services }: Props) {
 
           {/* Calendario y horarios */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-            <div className="bg-white p-3 rounded-xl shadow-sm border border-gray-200 flex justify-center">
+            <div className="bg-card p-3 rounded-xl shadow-sm border flex justify-center">
               <DayPicker
                 mode="single"
                 selected={selectedDay}
@@ -209,32 +209,32 @@ export default function Scheduler({ professional, services }: Props) {
                   nav_button: 'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100',
                   table: 'w-full border-collapse space-y-1',
                   head_row: 'flex',
-                  head_cell: 'text-gray-500 rounded-md w-9 font-normal text-[0.8rem]',
+                  head_cell: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
                   row: 'flex w-full mt-2',
                   cell:
-                    'h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-primary-400 first:[&:has([aria-selected])]:rounded-l-lg last:[&:has([aria-selected])]:rounded-r-lg focus-within:relative focus-within:z-20',
+                    'h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-primary/90 first:[&:has([aria-selected])]:rounded-l-lg last:[&:has([aria-selected])]:rounded-r-lg focus-within:relative focus-within:z-20',
                   day: 'h-9 w-9 p-0 font-normal aria-selected:opacity-100',
                   day_selected:
-                    'bg-primary-700 text-white hover:bg-primary-700 hover:text-white focus:bg-primary-700 focus:text-white rounded-lg',
-                  day_today: 'bg-gray-100 text-gray-900',
-                  day_outside: 'text-gray-400 opacity-50',
-                  day_disabled: 'text-gray-400 opacity-50',
+                    'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-lg',
+                  day_today: 'bg-muted text-foreground',
+                  day_outside: 'text-muted-foreground opacity-50',
+                  day_disabled: 'text-muted-foreground opacity-50',
                   day_hidden: 'invisible',
                 }}
               />
             </div>
             <div className="h-full">
               {selectedDay && (
-                <p className="text-center text-sm font-semibold text-gray-800 mb-2">
+                <p className="text-center text-sm font-semibold text-foreground mb-2">
                   Horarios para el {format(selectedDay, "eeee, d 'de' MMMM", { locale: es })}
                 </p>
               )}
-              <div className="p-2 border rounded-xl h-72 overflow-y-auto bg-gray-50">
+              <div className="p-2 border rounded-xl h-72 overflow-y-auto bg-muted">
                 {isLoading && (
-                  <p className="text-gray-400 text-center pt-4 animate-pulse">Buscando...</p>
+                  <p className="text-muted-foreground text-center pt-4 animate-pulse">Buscando...</p>
                 )}
                 {!isLoading && availableSlots.length === 0 && (
-                  <p className="text-gray-400 text-center pt-4">
+                  <p className="text-muted-foreground text-center pt-4">
                     {selectedDay ? 'No hay horarios disponibles.' : 'Selecciona un día.'}
                   </p>
                 )}
@@ -246,8 +246,8 @@ export default function Scheduler({ professional, services }: Props) {
                         onClick={() => handleSlotSelect(slot)}
                         className={`p-2 rounded-lg text-center font-semibold transition-colors border ${
                           selectedSlot?.getTime() === slot.getTime()
-                            ? 'bg-primary-700 text-white border-primary-700 shadow-md'
-                            : 'bg-white text-primary-700 border-primary-700 hover:bg-primary-400 hover:text-white'
+                            ? 'bg-primary text-primary-foreground border-primary shadow-md'
+                            : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
                         }`}
                       >
                         {format(slot, 'HH:mm')}
@@ -262,7 +262,7 @@ export default function Scheduler({ professional, services }: Props) {
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => setShowForm(true)}
-                className="px-6 py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-400"
+                className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
               >
                 Continuar
               </button>

@@ -2,18 +2,19 @@ import type { APIRoute } from 'astro';
 export const prerender = false;
 import { db } from '../../firebase/client';
 import { doc, getDoc, collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
-import { 
-  setHours, 
-  setMinutes, 
-  setSeconds, 
-  addMinutes, 
-  isBefore, 
-  isAfter, 
-  isEqual, 
-  startOfDay, 
-  endOfDay 
+import {
+  setHours,
+  setMinutes,
+  setSeconds,
+  addMinutes,
+  isBefore,
+  isAfter,
+  isEqual,
+  startOfDay,
+  endOfDay
 } from 'date-fns';
 
+// Return available time slots for a professional and service on a given date
 export const POST: APIRoute = async ({ request }) => {
   try {
     const { date, professionalId, serviceId } = await request.json();
@@ -25,7 +26,7 @@ export const POST: APIRoute = async ({ request }) => {
     const selectedDate = new Date(date);
     const dayOfWeek = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'][selectedDate.getDay()];
     
-    // --- 1. OBTENER DATOS NECESARIOS ---
+    // Retrieve professional and service details
     const profDocRef = doc(db, 'professionals', professionalId);
     const serviceDocRef = doc(db, 'services', serviceId);
     const [profDocSnap, serviceDocSnap] = await Promise.all([getDoc(profDocRef), getDoc(serviceDocRef)]);
@@ -39,10 +40,10 @@ export const POST: APIRoute = async ({ request }) => {
     const daySchedule = professional.workSchedule[dayOfWeek];
 
     if (!daySchedule || !daySchedule.isActive) {
-      return new Response(JSON.stringify([]), { status: 200 }); // No hay horarios si el día no está activo
+      return new Response(JSON.stringify([]), { status: 200 });
     }
 
-    // --- 2. OBTENER CITAS Y BLOQUEOS EXISTENTES ---
+    // Fetch existing appointments and time blocks
     const startOfSelectedDay = startOfDay(selectedDate);
     const endOfSelectedDay = endOfDay(selectedDate);
 
@@ -74,7 +75,7 @@ export const POST: APIRoute = async ({ request }) => {
       }))
     ];
 
-    // --- 3. GENERAR Y FILTRAR HORARIOS DISPONIBLES ---
+    // Generate available slots within work hours
     const availableSlots: Date[] = [];
     const { start, end } = daySchedule.workHours;
     let currentTime = setMinutes(setHours(startOfSelectedDay, parseInt(start.split(':')[0])), parseInt(start.split(':')[1]));
@@ -95,7 +96,8 @@ export const POST: APIRoute = async ({ request }) => {
         availableSlots.push(new Date(currentTime));
       }
 
-      currentTime = addMinutes(currentTime, 15); // Intervalo de búsqueda: cada 15 minutos
+      // Move to the next 15-minute window
+      currentTime = addMinutes(currentTime, 15);
     }
 
     return new Response(JSON.stringify(availableSlots), { status: 200 });

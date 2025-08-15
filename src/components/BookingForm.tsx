@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { httpsCallable } from 'firebase/functions';
-import { functions } from '../firebase/client'; 
+import { functions } from '../firebase/client';
 
 interface Service {
   id: string;
@@ -15,6 +15,7 @@ interface Props {
   onBookingSuccess: () => void;
 }
 
+// Form that submits client information to create a booking
 export default function BookingForm({ professionalId, selectedService, selectedSlot, onBookingSuccess }: Props) {
   const [formData, setFormData] = useState({
     clientName: '',
@@ -24,10 +25,12 @@ export default function BookingForm({ professionalId, selectedService, selectedS
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Update local form state when an input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Send booking details to the backend function
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData.clientName || !formData.clientEmail) {
@@ -78,12 +81,10 @@ export default function BookingForm({ professionalId, selectedService, selectedS
     }
   };
 
-  // El JSX/HTML del formulario no cambia en absoluto.
   return (
     <div className="mt-8 pt-6 border-t">
       <h2 className="text-2xl font-bold text-gray-700 mb-2">3. Confirma tus datos</h2>
       <div className="p-6 border rounded-lg bg-white mt-4">
-        {/* ... (Todo el <form> se mantiene igual) ... */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="clientName" className="text-sm font-medium text-gray-700">Nombre y Apellido</label>

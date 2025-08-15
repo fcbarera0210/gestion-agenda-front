@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
-import { es } from 'date-fns/locale';
+import { es, enUS } from 'date-fns/locale';
 import { format } from 'date-fns';
 import BookingForm from './BookingForm';
 import AppointmentSuccess from './AppointmentSuccess';
@@ -177,120 +177,123 @@ export default function Scheduler({ professional, services }: Props) {
     );
   }
 
-  // Paso 2: Calendario y selección de hora
-  return (
-    <div className="w-full">
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-foreground">2. Elige un día y una hora</h2>
-      </div>
+    // Paso 2: Calendario y selección de hora
+    return (
+      <div className="w-full">
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-foreground">2. Elige un día y una hora</h2>
+          <p className="text-muted-foreground mt-1">
+            Elige uno de los servicios a continuación para ver los horarios disponibles.
+          </p>
+        </div>
 
-      <div className="flex gap-2 mb-4">
-        {['PRESENCIAL', 'ONLINE'].map((type) => (
+        {/* Resumen del servicio seleccionado */}
+        <div className="flex justify-between items-center bg-muted p-3 rounded-xl border mb-6">
+          <div>
+            <p className="text-xs text-muted-foreground">Servicio seleccionado</p>
+            <p className="font-semibold text-foreground">{selectedService.name}</p>
+          </div>
           <button
-            key={type}
-            onClick={() => setSessionType(type as 'PRESENCIAL' | 'ONLINE')}
-            className={`px-4 py-2 rounded-lg border font-semibold ${
-              sessionType === type
-                ? 'bg-primary text-primary-foreground border-primary'
-                : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
-            }`}
+            onClick={() => handleSelectService(null)}
+            className="text-sm text-primary hover:underline font-semibold"
           >
-            {type}
+            Cambiar
           </button>
-        ))}
-      </div>
-
-      {/* Resumen del servicio seleccionado */}
-      <div className="flex justify-between items-center bg-muted p-3 rounded-xl border mb-6">
-        <div>
-          <p className="text-xs text-muted-foreground">Servicio seleccionado</p>
-          <p className="font-semibold text-foreground">{selectedService.name}</p>
         </div>
-        <button
-          onClick={() => handleSelectService(null)}
-          className="text-sm text-primary hover:underline font-semibold"
-        >
-          Cambiar
-        </button>
-      </div>
 
-      {/* Calendario y horarios */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        <div className="bg-card p-3 rounded-xl shadow-sm border flex justify-center">
-          <DayPicker
-            mode="single"
-            selected={selectedDay}
-            onSelect={handleDaySelect}
-            locale={es}
-            fromDate={new Date()}
-            classNames={{
-              months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
-              month: 'space-y-4',
-              caption: 'flex justify-center pt-1 relative items-center',
-              caption_label: 'text-sm font-medium',
-              nav: 'space-x-1 flex items-center',
-              nav_button: 'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100',
-              table: 'w-full border-collapse space-y-1',
-              head_row: 'flex',
-              head_cell: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
-              row: 'flex w-full mt-2',
-              cell:
-                'h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-primary/90 first:[&:has([aria-selected])]:rounded-l-lg last:[&:has([aria-selected])]:rounded-r-lg focus-within:relative focus-within:z-20',
-              day: 'h-9 w-9 p-0 font-normal aria-selected:opacity-100',
-              day_selected:
-                'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-lg',
-              day_today: 'bg-muted text-foreground',
-              day_outside: 'text-muted-foreground opacity-50',
-              day_disabled: 'text-muted-foreground opacity-50',
-              day_hidden: 'invisible',
-            }}
-          />
-        </div>
-        <div className="h-full">
-          {selectedDay && (
-            <p className="text-center text-sm font-semibold text-foreground mb-2">
-              Horarios para el {format(selectedDay, "eeee, d 'de' MMMM", { locale: es })}
-            </p>
-          )}
-          <div className="p-2 border rounded-xl h-72 overflow-y-auto bg-muted">
-            {isLoading && (
-              <p className="text-muted-foreground text-center pt-4 animate-pulse">Buscando...</p>
-            )}
-            {!isLoading && availableSlots.length === 0 && (
-              <p className="text-muted-foreground text-center pt-4">
-                {selectedDay ? 'No hay horarios disponibles.' : 'Selecciona un día.'}
-              </p>
-            )}
-            <div className="grid grid-cols-3 gap-2 p-2">
-              {!isLoading &&
-                availableSlots.map((slot, index) => (
+        {/* Calendario y horarios */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mb-6">
+          <div className="bg-card p-3 rounded-xl shadow-sm border flex justify-center">
+            <DayPicker
+              mode="single"
+              selected={selectedDay}
+              onSelect={handleDaySelect}
+              locale={es}
+              fromDate={new Date()}
+              classNames={{
+                months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
+                month: 'space-y-4',
+                caption: 'flex justify-center pt-1 relative items-center',
+                caption_label: 'text-sm font-medium',
+                nav: 'space-x-1 flex items-center',
+                nav_button: 'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100',
+                table: 'w-full border-collapse space-y-1',
+                head_row: 'flex',
+                head_cell: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
+                row: 'flex w-full mt-2',
+                cell:
+                  'h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-primary/90 first:[&:has([aria-selected])]:rounded-l-lg last:[&:has([aria-selected])]:rounded-r-lg focus-within:relative focus-within:z-20',
+                day: 'h-9 w-9 p-0 font-normal aria-selected:opacity-100',
+                day_selected:
+                  'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-lg',
+                day_today: 'bg-muted text-foreground',
+                day_outside: 'text-muted-foreground opacity-50',
+                day_disabled: 'text-muted-foreground opacity-50',
+                day_hidden: 'invisible',
+              }}
+            />
+          </div>
+
+          <div>
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-foreground mb-2">Tipo de sesión</h3>
+              <div className="flex gap-2">
+                {['PRESENCIAL', 'ONLINE'].map((type) => (
                   <button
-                    key={index}
-                    onClick={() => handleSlotSelect(slot)}
-                    className={`p-2 rounded-lg text-center font-semibold transition-colors border ${
-                      selectedSlot?.getTime() === slot.getTime()
-                        ? 'bg-primary text-primary-foreground border-primary shadow-md'
+                    key={type}
+                    onClick={() => setSessionType(type as 'PRESENCIAL' | 'ONLINE')}
+                    className={`px-4 py-2 rounded-lg border font-semibold ${
+                      sessionType === type
+                        ? 'bg-primary text-primary-foreground border-primary'
                         : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
                     }`}
                   >
-                    {format(slot, 'HH:mm')}
+                    {type}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Horas disponibles</h3>
+              <div className="p-2 border rounded-xl h-72 overflow-y-auto bg-muted">
+                {isLoading && (
+                  <p className="text-muted-foreground text-center pt-4 animate-pulse">Buscando...</p>
+                )}
+                {!isLoading && availableSlots.length === 0 && (
+                  <p className="text-muted-foreground text-center pt-4">
+                    {selectedDay ? 'No hay horarios disponibles.' : 'Selecciona un día.'}
+                  </p>
+                )}
+                <div className="grid grid-cols-3 gap-2 p-2">
+                  {!isLoading &&
+                    availableSlots.map((slot, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleSlotSelect(slot)}
+                        className={`p-2 rounded-lg text-center font-semibold transition-colors border ${
+                          selectedSlot?.getTime() === slot.getTime()
+                            ? 'bg-primary text-primary-foreground border-primary shadow-md'
+                            : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
+                        }`}
+                      >
+                        {format(slot, 'hh:mm a', { locale: enUS }).toUpperCase()}
+                      </button>
+                    ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {selectedSlot && (
-        <div className="flex justify-end mt-4">
+        {selectedSlot && (
           <button
             onClick={() => setShowForm(true)}
-            className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
+            className="w-full px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
           >
             Continuar
           </button>
-        </div>
-      )}
-    </div>
-  );
-}
+        )}
+      </div>
+    );
+  }

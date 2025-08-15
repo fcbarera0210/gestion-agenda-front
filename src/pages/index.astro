@@ -1,9 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Scheduler from '../components/Scheduler';
 
-// Home page that renders the default layout
+const professional = {
+  id: '1',
+  displayName: 'Dr. Juan Pérez',
+  title: 'Psicólogo',
+  photoURL: '/avatar.svg'
+};
+
+const services = [
+  { id: 'svc1', name: 'Consulta inicial', duration: 60, price: 40000 },
+  { id: 'svc2', name: 'Sesión de seguimiento', duration: 45, price: 30000 },
+];
 ---
 
-<Layout>
-
+<Layout title="Agenda" professional={professional}>
+  <Scheduler professional={professional} services={services} />
 </Layout>

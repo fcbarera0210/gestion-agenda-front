@@ -37,7 +37,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const professional = profDocSnap.data();
     const service = serviceDocSnap.data();
-    const daySchedule = professional.workSchedule[dayOfWeek];
+    const daySchedule = professional.workSchedule?.[dayOfWeek];
 
     if (!daySchedule || !daySchedule.isActive) {
       return new Response(JSON.stringify([]), { status: 200 });

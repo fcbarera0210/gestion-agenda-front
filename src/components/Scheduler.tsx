@@ -3,6 +3,7 @@ import { format, startOfWeek, addDays, addWeeks, isSameDay, startOfDay } from 'd
 import { es, enUS } from 'date-fns/locale';
 import BookingForm from './BookingForm';
 import AppointmentSuccess from './AppointmentSuccess';
+import Stepper from './Stepper';
 
 // Tipos de datos
 interface Service {
@@ -51,29 +52,6 @@ export default function Scheduler({ professional, services }: Props) {
 
   const steps = ['Servicio', 'Horario', 'Datos'];
   const currentStep = !selectedService ? 1 : showForm ? 3 : 2;
-
-  const Stepper = () => (
-    <div className="flex items-center mb-6" aria-label="Progreso">
-      {steps.map((step, index) => (
-        <React.Fragment key={step}>
-          <div
-            className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
-              index + 1 <= currentStep
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted text-muted-foreground'
-            }`}
-          >
-            {index + 1}
-          </div>
-          {index < steps.length - 1 && (
-            <div
-              className={`flex-1 h-1 ${index + 1 < currentStep ? 'bg-primary' : 'bg-muted'}`}
-            ></div>
-          )}
-        </React.Fragment>
-      ))}
-    </div>
-  );
 
   const fetchAvailability = async () => {
     if (!selectedDay || !selectedService) return;
@@ -180,7 +158,7 @@ export default function Scheduler({ professional, services }: Props) {
   if (!selectedService) {
     return (
       <div className="w-full">
-        <Stepper />
+        <Stepper steps={steps} currentStep={currentStep} />
         <div className="mb-6">
           <h2 className="text-xl font-bold text-foreground">Selecciona un servicio</h2>
           <p className="text-muted-foreground mt-1">Elige uno para ver los horarios disponibles.</p>
@@ -226,7 +204,7 @@ export default function Scheduler({ professional, services }: Props) {
     if (showForm && selectedSlot) {
       return (
         <div className="w-full">
-          <Stepper />
+          <Stepper steps={steps} currentStep={currentStep} />
           <BookingForm
             professionalId={professional.id}
             selectedService={selectedService}
@@ -241,7 +219,7 @@ export default function Scheduler({ professional, services }: Props) {
     // Paso 2: Calendario y selección de hora
     return (
       <div className="w-full">
-        <Stepper />
+        <Stepper steps={steps} currentStep={currentStep} />
         <div className="mb-6">
           <h2 className="text-xl font-bold text-foreground">Elige un día y una hora</h2>
           <p className="text-muted-foreground mt-1">

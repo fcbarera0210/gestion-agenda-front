@@ -1,46 +1,68 @@
-# Astro Starter Kit: Basics
+# Gestión de Agenda Front
 
-```sh
-npm create astro@latest -- --template basics
+Aplicación web para agendar citas con profesionales de manera sencilla.
+
+## Descripción
+
+Gestion Agenda Front es el frontend de una plataforma de reservas. Permite
+navegar por la oferta de profesionales, elegir un servicio y reservar una
+sesión en los horarios disponibles. El proyecto está construido con [Astro](https://astro.build/)
+y componentes de [React](https://react.dev/), utiliza [Tailwind CSS](https://tailwindcss.com/) para
+los estilos y se integra con [Firebase](https://firebase.google.com/) (Firestore y Functions)
+como backend para persistencia y lógica de negocio.
+
+## Requisitos
+
+- Node.js 18+
+- Cuenta y proyecto de Firebase configurado
+
+## Instalación
+
+1. Clonar el repositorio.
+2. Instalar dependencias:
+
+```bash
+npm install
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+3. Crear un archivo `.env` en la raíz con las variables de configuración de Firebase:
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```
+PUBLIC_FIREBASE_API_KEY=
+PUBLIC_FIREBASE_AUTH_DOMAIN=
+PUBLIC_FIREBASE_PROJECT_ID=
+PUBLIC_FIREBASE_STORAGE_BUCKET=
+PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+PUBLIC_FIREBASE_APP_ID=
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Uso
 
-## 🧞 Commands
+### Servidor de desarrollo
 
-All commands are run from the root of the project, from a terminal:
+```bash
+npm run dev
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+El sitio estará disponible en `http://localhost:4321`.
 
-## 👀 Want to learn more?
+### Compilación y vista previa
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```bash
+npm run build
+npm run preview
+```
+
+El resultado de la compilación se genera en la carpeta `dist/`.
+
+## Estructura del proyecto
+
+```
+src/
+├── assets/        Recursos estáticos
+├── components/    Componentes de React como el agendador
+├── firebase/      Inicialización de Firebase
+├── layouts/       Plantillas base
+├── pages/         Rutas de la aplicación
+└── styles/        Estilos globales
+```

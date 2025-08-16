@@ -205,6 +205,14 @@ export default function Scheduler({ professional, services }: Props) {
             </div>
           ))}
         </div>
+        <div className="flex justify-start pt-6">
+          <a
+            href="/"
+            className="flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg border text-foreground hover:bg-muted transition-colors"
+          >
+            Volver al inicio
+          </a>
+        </div>
       </div>
     );
   }

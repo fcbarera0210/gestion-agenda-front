@@ -1,20 +1,59 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Scheduler from '../components/Scheduler';
+import '../styles/global.css';
+import ProfessionalCard from '../components/ProfessionalCard';
+import { db } from '../firebase/client';
+import { collection, getDocs } from 'firebase/firestore';
+import type { DocumentData } from 'firebase/firestore';
 
-const professional = {
-  id: '1',
-  displayName: 'Dr. Juan Pérez',
-  title: 'Psicólogo',
-  photoURL: '/avatar.svg'
-};
+interface Professional {
+  id: string;
+  displayName: string;
+  title: string;
+  photoURL?: string;
+}
 
-const services = [
-  { id: 'svc1', name: 'Consulta inicial', duration: 60, price: 40000 },
-  { id: 'svc2', name: 'Sesión de seguimiento', duration: 45, price: 30000 },
-];
+const snapshot = await getDocs(collection(db, 'professionals'));
+const professionals: Professional[] = snapshot.docs.map(doc => {
+  const data = doc.data() as DocumentData;
+  return {
+    id: doc.id,
+    displayName: data.displayName,
+    title: data.title,
+    photoURL: data.photoURL,
+  };
+});
 ---
 
-<Layout title="Agenda" professional={professional}>
-  <Scheduler professional={professional} services={services} />
-</Layout>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Sistema de Agendamiento" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Agenda</title>
+  </head>
+<body>
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="w-full max-w-md bg-card rounded-2xl shadow-lg overflow-hidden m-4">
+        <header class="bg-primary text-primary-foreground p-6 text-center">
+          <h1 class="text-xl font-bold">Agenda tu atención</h1>
+          <p class="text-sm text-primary-foreground/90 mt-1">
+            Sigue los pasos para completar tu reserva.
+          </p>
+        </header>
+        <div class="p-6 space-y-4">
+          {professionals.map((professional) => (
+            <ProfessionalCard
+              key={professional.id}
+              id={professional.id}
+              displayName={professional.displayName}
+              title={professional.title}
+              photoURL={professional.photoURL}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

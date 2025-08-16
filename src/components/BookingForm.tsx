@@ -15,10 +15,11 @@ interface Props {
   selectedService: Service;
   selectedSlot: Date;
   onBookingSuccess: () => void;
+  onBack: () => void;
 }
 
 // Form that submits client information to create a booking
-export default function BookingForm({ professionalId, selectedService, selectedSlot, onBookingSuccess }: Props) {
+export default function BookingForm({ professionalId, selectedService, selectedSlot, onBookingSuccess, onBack }: Props) {
   const { register, handleSubmit, formState: { errors, isValid, isSubmitting } } = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -53,19 +54,22 @@ export default function BookingForm({ professionalId, selectedService, selectedS
   };
 
   return (
-    <div className="mt-8 pt-6 border-t">
+    <div className="mt-8 pt-6 max-w-xl mx-auto">
       <h2 className="text-2xl font-bold text-foreground mb-2">3. Confirma tus datos</h2>
-      <div className="p-6 border rounded-xl bg-card mt-4">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="relative">
-            <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <label htmlFor="clientName" className="text-sm font-medium text-foreground">Nombre y Apellido</label>
+      <p className="text-muted-foreground mb-6">
+        Revisa y completa tu información para confirmar la reserva.
+      </p>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div>
+          <label htmlFor="clientName" className="text-sm font-medium text-foreground">Nombre y Apellido</label>
+          <div className="relative mt-1">
+            <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
             <input
               type="text"
               id="clientName"
               autoComplete="name"
               placeholder="Ingresa tu nombre"
-              className="w-full pl-10 px-4 py-3 mt-1 bg-muted rounded-lg text-foreground"
+              className="w-full pl-10 px-4 py-3 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
               aria-required="true"
               aria-invalid={errors.clientName ? 'true' : 'false'}
               aria-describedby={errors.clientName ? 'clientName-error' : undefined}
@@ -74,79 +78,88 @@ export default function BookingForm({ professionalId, selectedService, selectedS
                 minLength: { value: 3, message: 'Mínimo 3 caracteres' }
               })}
             />
-            {errors.clientName && (
-              <p id="clientName-error" className="text-sm text-destructive mt-1">{errors.clientName.message as string}</p>
-            )}
           </div>
+          {errors.clientName && (
+            <p id="clientName-error" className="text-sm text-destructive mt-1">{errors.clientName.message as string}</p>
+          )}
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative">
-              <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <label htmlFor="clientEmail" className="text-sm font-medium text-foreground">Correo Electrónico</label>
-              <input
-                type="email"
-                id="clientEmail"
-                autoComplete="email"
-                placeholder="nombre@ejemplo.com"
-                className="w-full pl-10 px-4 py-3 mt-1 bg-muted rounded-lg text-foreground"
-                aria-required="true"
-                aria-invalid={errors.clientEmail ? 'true' : 'false'}
-                aria-describedby={errors.clientEmail ? 'clientEmail-error' : undefined}
-                {...register('clientEmail', {
-                  required: 'El correo es obligatorio',
-                  pattern: { value: /.+@.+\..+/, message: 'Correo inválido' }
-                })}
-              />
-              {errors.clientEmail && (
-                <p id="clientEmail-error" className="text-sm text-destructive mt-1">{errors.clientEmail.message as string}</p>
-              )}
-            </div>
-
-            <div className="relative">
-              <FaPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <label htmlFor="clientPhone" className="text-sm font-medium text-foreground">Teléfono (Opcional)</label>
-              <input
-                type="tel"
-                id="clientPhone"
-                autoComplete="tel"
-                placeholder="Ej: 555123456"
-                className="w-full pl-10 px-4 py-3 mt-1 bg-muted rounded-lg text-foreground"
-                aria-required="false"
-                aria-invalid={errors.clientPhone ? 'true' : 'false'}
-                aria-describedby={errors.clientPhone ? 'clientPhone-error' : undefined}
-                {...register('clientPhone', {
-                  pattern: { value: /^[0-9]+$/, message: 'Solo números' }
-                })}
-              />
-              {errors.clientPhone && (
-                <p id="clientPhone-error" className="text-sm text-destructive mt-1">{errors.clientPhone.message as string}</p>
-              )}
-            </div>
+        <div>
+          <label htmlFor="clientEmail" className="text-sm font-medium text-foreground">Correo Electrónico</label>
+          <div className="relative mt-1">
+            <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+            <input
+              type="email"
+              id="clientEmail"
+              autoComplete="email"
+              placeholder="nombre@ejemplo.com"
+              className="w-full pl-10 px-4 py-3 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
+              aria-required="true"
+              aria-invalid={errors.clientEmail ? 'true' : 'false'}
+              aria-describedby={errors.clientEmail ? 'clientEmail-error' : undefined}
+              {...register('clientEmail', {
+                required: 'El correo es obligatorio',
+                pattern: { value: /.+@.+\..+/, message: 'Correo inválido' }
+              })}
+            />
           </div>
+          {errors.clientEmail && (
+            <p id="clientEmail-error" className="text-sm text-destructive mt-1">{errors.clientEmail.message as string}</p>
+          )}
+        </div>
 
-          <div>
-            <label htmlFor="notes" className="text-sm font-medium text-foreground">Notas</label>
-            <textarea
-              id="notes"
-              rows={3}
-              autoComplete="off"
-              placeholder="Información adicional"
-              className="w-full px-4 py-3 mt-1 bg-muted rounded-lg text-foreground"
-              {...register('notes')}
-            ></textarea>
+        <div>
+          <label htmlFor="clientPhone" className="text-sm font-medium text-foreground">Teléfono (Opcional)</label>
+          <div className="relative mt-1">
+            <FaPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+            <input
+              type="tel"
+              id="clientPhone"
+              autoComplete="tel"
+              placeholder="Ej: 555123456"
+              className="w-full pl-10 px-4 py-3 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
+              aria-required="false"
+              aria-invalid={errors.clientPhone ? 'true' : 'false'}
+              aria-describedby={errors.clientPhone ? 'clientPhone-error' : undefined}
+              {...register('clientPhone', {
+                pattern: { value: /^[0-9]+$/, message: 'Solo números' }
+              })}
+            />
           </div>
+          {errors.clientPhone && (
+            <p id="clientPhone-error" className="text-sm text-destructive mt-1">{errors.clientPhone.message as string}</p>
+          )}
+        </div>
 
-          <div className="flex justify-end pt-4">
-            <button
-              type="submit"
-              disabled={!isValid || isSubmitting}
-              className="flex items-center justify-center w-48 px-6 py-3 font-semibold rounded-lg shadow-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-primary/50"
-            >
-              {isSubmitting ? 'Agendando...' : 'Realizar Reserva'}
-            </button>
-          </div>
-        </form>
-      </div>
+        <div>
+          <label htmlFor="notes" className="text-sm font-medium text-foreground">Notas</label>
+          <textarea
+            id="notes"
+            rows={3}
+            autoComplete="off"
+            placeholder="Información adicional"
+            className="w-full px-4 py-3 mt-1 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
+            {...register('notes')}
+          ></textarea>
+        </div>
+
+        <div className="flex justify-between pt-6">
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg border text-foreground hover:bg-muted transition-colors"
+          >
+            Volver
+          </button>
+          <button
+            type="submit"
+            disabled={!isValid || isSubmitting}
+            className="flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg shadow-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {isSubmitting ? 'Agendando...' : 'Realizar Reserva'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

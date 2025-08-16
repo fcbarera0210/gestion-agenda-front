@@ -243,8 +243,8 @@ export default function Scheduler({ professional, services }: Props) {
           </button>
         </div>
 
-        {/* Calendario y horarios */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6 items-start mb-6">
+        {/* Calendario, tipo de sesión y horarios */}
+        <div className="space-y-6 mb-6">
           <div className="bg-card p-3 rounded-xl shadow-sm border">
             <div className="flex flex-col items-center">
               <div className="flex items-center justify-between w-full mb-2">
@@ -298,59 +298,57 @@ export default function Scheduler({ professional, services }: Props) {
           </div>
 
           <div>
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-foreground mb-2">Tipo de sesión</h3>
-              <div className="flex gap-2 w-full" role="radiogroup" aria-label="Tipo de sesión">
-                {['PRESENCIAL', 'ONLINE'].map((type) => (
-                  <label
-                    key={type}
-                    className={`flex-1 px-4 py-2 text-center rounded-lg border font-semibold cursor-pointer ${
-                      sessionType === type
-                        ? 'bg-primary text-primary-foreground border-primary'
-                        : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="sessionType"
-                      value={type}
-                      className="sr-only"
-                      checked={sessionType === type}
-                      onChange={() => setSessionType(type as 'PRESENCIAL' | 'ONLINE')}
-                    />
-                    {type}
-                  </label>
-                ))}
-              </div>
+            <h3 className="text-lg font-semibold text-foreground mb-2">Tipo de sesión</h3>
+            <div className="flex gap-2 w-full" role="radiogroup" aria-label="Tipo de sesión">
+              {['PRESENCIAL', 'ONLINE'].map((type) => (
+                <label
+                  key={type}
+                  className={`flex-1 px-4 py-2 text-center rounded-lg border font-semibold cursor-pointer ${
+                    sessionType === type
+                      ? 'bg-primary text-primary-foreground border-primary'
+                      : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="sessionType"
+                    value={type}
+                    className="sr-only"
+                    checked={sessionType === type}
+                    onChange={() => setSessionType(type as 'PRESENCIAL' | 'ONLINE')}
+                  />
+                  {type}
+                </label>
+              ))}
             </div>
+          </div>
 
-            <div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">Horas disponibles</h3>
-              <div className="p-2 border rounded-xl max-h-80 overflow-y-auto bg-muted">
-                {isLoading && (
-                  <p className="text-muted-foreground text-center pt-4 animate-pulse">Buscando...</p>
-                )}
-                {!isLoading && availableSlots.length === 0 && (
-                  <p className="text-muted-foreground text-center pt-4">
-                    {selectedDay ? 'No hay horarios disponibles.' : 'Selecciona un día.'}
-                  </p>
-                )}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 p-2">
-                  {!isLoading &&
-                    availableSlots.map((slot, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleSlotSelect(slot)}
-                        className={`p-2 rounded-lg text-center font-semibold transition-colors border ${
-                          selectedSlot?.getTime() === slot.getTime()
-                            ? 'bg-primary text-primary-foreground border-primary shadow-md'
-                            : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
-                        }`}
-                      >
-                        {format(slot, 'hh:mm a', { locale: enUS }).toUpperCase()}
-                      </button>
-                    ))}
-                </div>
+          <div>
+            <h3 className="text-lg font-semibold text-foreground mb-2">Horas disponibles</h3>
+            <div className="p-2 border rounded-xl max-h-80 overflow-y-auto bg-muted">
+              {isLoading && (
+                <p className="text-muted-foreground text-center pt-4 animate-pulse">Buscando...</p>
+              )}
+              {!isLoading && availableSlots.length === 0 && (
+                <p className="text-muted-foreground text-center pt-4">
+                  {selectedDay ? 'No hay horarios disponibles.' : 'Selecciona un día.'}
+                </p>
+              )}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 p-2">
+                {!isLoading &&
+                  availableSlots.map((slot, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleSlotSelect(slot)}
+                      className={`w-full p-2 rounded-lg text-center font-semibold whitespace-nowrap transition-colors border ${
+                        selectedSlot?.getTime() === slot.getTime()
+                          ? 'bg-primary text-primary-foreground border-primary shadow-md'
+                          : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
+                      }`}
+                    >
+                      {format(slot, 'hh:mm a', { locale: enUS }).toUpperCase()}
+                    </button>
+                  ))}
               </div>
             </div>
           </div>

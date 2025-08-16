@@ -10,6 +10,13 @@ interface Service {
   duration: number;
 }
 
+interface BookingFormData {
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
+  notes: string;
+}
+
 interface Props {
   professionalId: string | undefined;
   selectedService: Service;
@@ -20,7 +27,7 @@ interface Props {
 
 // Form that submits client information to create a booking
 export default function BookingForm({ professionalId, selectedService, selectedSlot, onBookingSuccess, onBack }: Props) {
-  const { register, handleSubmit, formState: { errors, isValid, isSubmitting } } = useForm({
+  const { register, handleSubmit, formState: { errors, isValid, isSubmitting } } = useForm<BookingFormData>({
     mode: 'onChange',
     defaultValues: {
       clientName: '',
@@ -30,7 +37,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
     }
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: BookingFormData): Promise<void> => {
     if (!professionalId || !selectedService || !selectedSlot) {
       return;
     }

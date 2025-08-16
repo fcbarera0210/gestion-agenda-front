@@ -90,9 +90,9 @@ export const POST: APIRoute = async ({ request }) => {
         (isBefore(currentTime, event.end) && isAfter(slotEnd, event.start))
       );
       
-      const isTooLate = isAfter(currentTime, new Date());
+      const isFutureSlot = isAfter(currentTime, Date.now());
 
-      if (!isOverlapping && isTooLate) {
+      if (!isOverlapping && isFutureSlot) {
         availableSlots.push(new Date(currentTime));
       }
 

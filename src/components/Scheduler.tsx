@@ -45,6 +45,32 @@ export default function Scheduler({ professional, services }: Props) {
     sessionType: string;
   } | null>(null);
 
+  const steps = ['Servicio', 'Horario', 'Datos'];
+  const currentStep = !selectedService ? 1 : showForm ? 3 : 2;
+
+  const Stepper = () => (
+    <div className="flex items-center mb-6" aria-label="Progreso">
+      {steps.map((step, index) => (
+        <React.Fragment key={step}>
+          <div
+            className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
+              index + 1 <= currentStep
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted text-muted-foreground'
+            }`}
+          >
+            {index + 1}
+          </div>
+          {index < steps.length - 1 && (
+            <div
+              className={`flex-1 h-1 ${index + 1 < currentStep ? 'bg-primary' : 'bg-muted'}`}
+            ></div>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+
   // Buscar disponibilidad cuando cambia día o servicio
   useEffect(() => {
     if (!selectedDay || !selectedService) {
@@ -122,6 +148,7 @@ export default function Scheduler({ professional, services }: Props) {
   if (!selectedService) {
     return (
       <div className="w-full">
+        <Stepper />
         <div className="mb-6">
           <h2 className="text-xl font-bold text-foreground">1. Selecciona un servicio</h2>
           <p className="text-muted-foreground mt-1">Elige uno para ver los horarios disponibles.</p>
@@ -159,6 +186,7 @@ export default function Scheduler({ professional, services }: Props) {
   if (showForm && selectedSlot) {
     return (
       <div className="w-full">
+        <Stepper />
         <div className="mb-4">
           <button
             onClick={() => setShowForm(false)}
@@ -180,6 +208,7 @@ export default function Scheduler({ professional, services }: Props) {
     // Paso 2: Calendario y selección de hora
     return (
       <div className="w-full">
+        <Stepper />
         <div className="mb-6">
           <h2 className="text-xl font-bold text-foreground">2. Elige un día y una hora</h2>
           <p className="text-muted-foreground mt-1">
@@ -237,19 +266,26 @@ export default function Scheduler({ professional, services }: Props) {
           <div>
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-foreground mb-2">Tipo de sesión</h3>
-              <div className="flex gap-2">
+              <div className="flex gap-2" role="radiogroup" aria-label="Tipo de sesión">
                 {['PRESENCIAL', 'ONLINE'].map((type) => (
-                  <button
+                  <label
                     key={type}
-                    onClick={() => setSessionType(type as 'PRESENCIAL' | 'ONLINE')}
-                    className={`px-4 py-2 rounded-lg border font-semibold ${
+                    className={`px-4 py-2 rounded-lg border font-semibold cursor-pointer ${
                       sessionType === type
                         ? 'bg-primary text-primary-foreground border-primary'
                         : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
                     }`}
                   >
+                    <input
+                      type="radio"
+                      name="sessionType"
+                      value={type}
+                      className="sr-only"
+                      checked={sessionType === type}
+                      onChange={() => setSessionType(type as 'PRESENCIAL' | 'ONLINE')}
+                    />
                     {type}
-                  </button>
+                  </label>
                 ))}
               </div>
             </div>

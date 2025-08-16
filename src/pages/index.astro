@@ -10,7 +10,7 @@ import ThemeToggle from '../components/ThemeToggle.astro';
     <meta name="description" content="Sistema de Agendamiento" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Bienvenido</title>
+    <title>Inicio</title>
     <script is:inline>
       const theme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -19,24 +19,26 @@ import ThemeToggle from '../components/ThemeToggle.astro';
       }
     </script>
   </head>
-  <body>
+  <body class="relative">
+    <div class="absolute top-4 right-4">
+      <ThemeToggle />
+    </div>
     <div class="flex items-center justify-center min-h-screen">
-      <div class="w-full max-w-md bg-card rounded-2xl shadow-lg overflow-hidden m-4 text-center">
-        <header class="bg-primary text-primary-foreground p-6 flex items-center">
-          <div class="text-left">
-            <h1 class="text-xl font-bold">Bienvenido</h1>
-            <p class="text-sm text-primary-foreground/90 mt-1">Inicia tu reserva en unos simples pasos.</p>
-          </div>
-          <div class="ml-auto flex items-center">
-            <ThemeToggle />
-          </div>
-        </header>
-        <div class="p-6">
+      <div class="w-full max-w-md bg-card rounded-2xl shadow-lg overflow-hidden m-4">
+        <div class="relative bg-[#6c3edc] p-6">
+          <img src="/recurso17.png" alt="Seleccionar fecha" class="w-full" />
+        </div>
+        <div class="p-6 text-center space-y-4">
+          <h1 class="text-xl font-bold">Escoge a la persona correcta para el problema correcto</h1>
+          <p class="text-sm text-muted-foreground">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibh euismod.
+          </p>
+          <p class="text-sm text-muted-foreground">Lorem ipsum?</p>
           <a
             href="/profesionales"
-            class="block w-full px-6 py-3 border border-primary text-primary font-semibold rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors"
+            class="block w-full px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors"
           >
-            Comenzar
+            Reservar hora
           </a>
         </div>
       </div>

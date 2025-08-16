@@ -145,6 +145,19 @@ export default function Scheduler({ professional, services }: Props) {
     setBookingSuccess(true);
   };
 
+  const handleRestart = () => {
+    setSelectedService(null);
+    setSelectedDay(undefined);
+    setCurrentWeek(startOfWeek(new Date(), { weekStartsOn: 1 }));
+    setSelectedSlot(null);
+    setAvailableSlots([]);
+    setIsLoading(false);
+    setBookingSuccess(false);
+    setSessionType('PRESENCIAL');
+    setShowForm(false);
+    setBookingDetails(null);
+  };
+
   // Vista de éxito
   if (bookingSuccess && bookingDetails) {
     return (
@@ -153,6 +166,7 @@ export default function Scheduler({ professional, services }: Props) {
         service={bookingDetails.service}
         slot={bookingDetails.slot}
         sessionType={bookingDetails.sessionType}
+        onRestart={handleRestart}
       />
     );
   }
@@ -164,9 +178,7 @@ export default function Scheduler({ professional, services }: Props) {
         <Stepper />
         <div className="mb-6">
           <h2 className="text-xl font-bold text-foreground">Selecciona un servicio</h2>
-          <p className="text-muted-foreground mt-1">
-            Elige uno para ver los horarios disponibles.
-          </p>
+          <p className="text-muted-foreground mt-1">Elige uno para ver los horarios disponibles.</p>
         </div>
         <div className="space-y-4">
           {services.map((service) => (

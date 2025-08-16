@@ -24,7 +24,13 @@ interface Props {
   onRestart: () => void;
 }
 
-export default function AppointmentSuccess({ professional, service, slot, sessionType, onRestart }: Props) {
+export default function AppointmentSuccess({
+  professional,
+  service,
+  slot,
+  sessionType,
+  onRestart,
+}: Props) {
   return (
     <div className="w-full flex justify-center">
       <div className="max-w-md text-center bg-card p-8 rounded-xl border shadow-sm">
@@ -34,6 +40,7 @@ export default function AppointmentSuccess({ professional, service, slot, sessio
           Tu cita con {professional.displayName} está confirmada para{' '}
           {format(slot, "eeee d 'de' MMMM 'a las' HH:mm", { locale: es })}.
         </p>
+
         <div className="text-left space-y-1 text-foreground">
           <p>
             <span className="font-semibold">Ubicación:</span> {sessionType}
@@ -46,6 +53,7 @@ export default function AppointmentSuccess({ professional, service, slot, sessio
             {service.price > 0 ? `$${service.price.toLocaleString('es-CL')}` : 'Gratis'}
           </p>
         </div>
+
         <div className="mt-6">
           <button
             onClick={onRestart}
@@ -58,4 +66,3 @@ export default function AppointmentSuccess({ professional, service, slot, sessio
     </div>
   );
 }
-

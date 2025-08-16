@@ -325,7 +325,7 @@ export default function Scheduler({ professional, services }: Props) {
 
           <div>
             <h3 className="text-lg font-semibold text-foreground mb-2">Horas disponibles</h3>
-            <div className="p-2 border rounded-xl max-h-80 overflow-y-auto bg-muted">
+            <div className="p-2 border rounded-xl max-h-80 overflow-y-auto bg-muted scrollbar-thin">
               {isLoading && (
                 <p className="text-muted-foreground text-center pt-4 animate-pulse">Buscando...</p>
               )}
@@ -334,7 +334,7 @@ export default function Scheduler({ professional, services }: Props) {
                   {selectedDay ? 'No hay horarios disponibles.' : 'Selecciona un día.'}
                 </p>
               )}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 p-2">
+              <div className="grid grid-cols-2 gap-2 p-2">
                 {!isLoading &&
                   availableSlots.map((slot, index) => (
                     <button

@@ -196,27 +196,20 @@ export default function Scheduler({ professional, services }: Props) {
   }
 
   // Paso 3: Formulario de reserva en pantalla independiente
-  if (showForm && selectedSlot) {
-    return (
-      <div className="w-full">
-        <Stepper />
-        <div className="mb-4">
-          <button
-            onClick={() => setShowForm(false)}
-            className="text-primary hover:underline text-sm font-semibold"
-          >
-            ← Volver
-          </button>
+    if (showForm && selectedSlot) {
+      return (
+        <div className="w-full">
+          <Stepper />
+          <BookingForm
+            professionalId={professional.id}
+            selectedService={selectedService}
+            selectedSlot={selectedSlot}
+            onBookingSuccess={handleBookingSuccess}
+            onBack={() => setShowForm(false)}
+          />
         </div>
-        <BookingForm
-          professionalId={professional.id}
-          selectedService={selectedService}
-          selectedSlot={selectedSlot}
-          onBookingSuccess={handleBookingSuccess}
-        />
-      </div>
-    );
-  }
+      );
+    }
 
     // Paso 2: Calendario y selección de hora
     return (

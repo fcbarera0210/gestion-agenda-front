@@ -13,7 +13,7 @@ export default function ProfessionalCard({ id, displayName, title, photoURL }: P
       className="flex items-center gap-4 p-4 bg-card rounded-xl shadow-sm border transition hover:shadow-md hover:border-primary"
     >
       <img
-        src={photoURL || '/doctor-placeholder.svg'}
+        src={photoURL || '/doctor-placeholder.png'}
         alt={`Foto de ${displayName}`}
         className="w-16 h-16 rounded-full object-cover"
       />

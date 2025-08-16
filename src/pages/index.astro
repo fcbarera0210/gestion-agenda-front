@@ -1,27 +1,5 @@
 ---
 import '../styles/global.css';
-import ProfessionalCard from '../components/ProfessionalCard';
-import { db } from '../firebase/client';
-import { collection, getDocs } from 'firebase/firestore';
-import type { DocumentData } from 'firebase/firestore';
-
-interface Professional {
-  id: string;
-  displayName: string;
-  title: string;
-  photoURL?: string;
-}
-
-const snapshot = await getDocs(collection(db, 'professionals'));
-const professionals: Professional[] = snapshot.docs.map(doc => {
-  const data = doc.data() as DocumentData;
-  return {
-    id: doc.id,
-    displayName: data.displayName,
-    title: data.title,
-    photoURL: data.photoURL,
-  };
-});
 ---
 
 <!doctype html>
@@ -31,7 +9,7 @@ const professionals: Professional[] = snapshot.docs.map(doc => {
     <meta name="description" content="Sistema de Agendamiento" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Agenda</title>
+    <title>Bienvenido</title>
     <script is:inline>
       const theme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -42,33 +20,28 @@ const professionals: Professional[] = snapshot.docs.map(doc => {
   </head>
   <body>
     <div class="flex items-center justify-center min-h-screen">
-      <div class="w-full max-w-md bg-card rounded-2xl shadow-lg overflow-hidden m-4">
-        <header class="bg-primary text-primary-foreground p-6 flex items-center">
-          <div class="flex-1 text-center">
-            <h1 class="text-xl font-bold">Agenda tu atención</h1>
-            <p class="text-sm text-primary-foreground/90 mt-1">
-              Sigue los pasos para completar tu reserva.
-            </p>
-          </div>
+      <div class="w-full max-w-md bg-card rounded-2xl shadow-lg overflow-hidden m-4 text-center">
+        <header class="bg-primary text-primary-foreground p-6">
+          <h1 class="text-xl font-bold">Bienvenido</h1>
+          <p class="text-sm text-primary-foreground/90 mt-1">Inicia tu reserva en unos simples pasos.</p>
+        </header>
+        <div class="p-6">
+          <a
+            href="/profesionales"
+            class="block w-full px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            Comenzar
+          </a>
+        </div>
+        <div class="p-4">
           <button
             id="theme-toggle"
             type="button"
             aria-label="Cambiar tema"
-            class="ml-auto text-2xl"
+            class="text-2xl"
           >
             🌓
           </button>
-        </header>
-        <div class="p-6 space-y-4">
-          {professionals.map((professional) => (
-            <ProfessionalCard
-              key={professional.id}
-              id={professional.id}
-              displayName={professional.displayName}
-              title={professional.title}
-              photoURL={professional.photoURL}
-            />
-          ))}
         </div>
       </div>
     </div>

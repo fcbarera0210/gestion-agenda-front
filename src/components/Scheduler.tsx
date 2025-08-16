@@ -18,6 +18,7 @@ interface Professional {
   displayName: string;
   title: string;
   photoURL?: string;
+  workSchedule?: Record<string, { isActive: boolean }>;
 }
 
 interface Props {
@@ -190,7 +191,7 @@ export default function Scheduler({ professional, services }: Props) {
         </div>
         <div className="flex justify-start pt-6">
           <a
-            href="/"
+            href="/profesionales"
             className="flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg border text-foreground hover:bg-muted transition-colors"
           >
             Volver al inicio
@@ -274,7 +275,9 @@ export default function Scheduler({ professional, services }: Props) {
               <div className="grid grid-cols-7 gap-1 w-full">
                 {Array.from({ length: 7 }).map((_, i) => {
                   const day = addDays(currentWeek, i);
-                  const disabled = day < today;
+                  const dayName = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][day.getDay()];
+                  const isActive = professional.workSchedule?.[dayName]?.isActive;
+                  const disabled = day < today || !isActive;
                   const selected = selectedDay && isSameDay(day, selectedDay);
                   return (
                     <button

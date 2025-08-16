@@ -1,6 +1,7 @@
 import React from 'react';
 import { httpsCallable } from 'firebase/functions';
-import { functions } from '../firebase/client';
+import { functions, db } from '../firebase/client';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
 import { FaUser, FaEnvelope, FaPhone } from 'react-icons/fa';
 
@@ -27,7 +28,7 @@ interface Props {
 
 // Form that submits client information to create a booking
 export default function BookingForm({ professionalId, selectedService, selectedSlot, onBookingSuccess, onBack }: Props) {
-  const { register, handleSubmit, formState: { errors, isValid, isSubmitting } } = useForm<BookingFormData>({
+  const { register, handleSubmit, formState: { errors, isValid, isSubmitting }, setValue, getValues } = useForm<BookingFormData>({
     mode: 'onChange',
     defaultValues: {
       clientName: '',
@@ -60,6 +61,23 @@ export default function BookingForm({ professionalId, selectedService, selectedS
     }
   };
 
+  const handleEmailBlur = async (): Promise<void> => {
+    const email = getValues('clientEmail');
+    if (!email || !professionalId) return;
+    try {
+      const clientsRef = collection(db, 'professionals', professionalId, 'clients');
+      const q = query(clientsRef, where('email', '==', email));
+      const snapshot = await getDocs(q);
+      if (!snapshot.empty) {
+        const client = snapshot.docs[0].data() as any;
+        setValue('clientName', client.name || '');
+        setValue('clientPhone', client.phone || '');
+      }
+    } catch (err) {
+      console.error('Error al buscar cliente:', err);
+    }
+  };
+
   return (
     <div className="mt-6 max-w-xl mx-auto">
       <div className="mb-6">
@@ -69,6 +87,31 @@ export default function BookingForm({ professionalId, selectedService, selectedS
         </p>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div>
+          <label htmlFor="clientEmail" className="text-sm font-medium text-foreground">Correo Electrónico</label>
+          <div className="relative mt-1">
+            <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+            <input
+              type="email"
+              id="clientEmail"
+              autoComplete="email"
+              placeholder="nombre@ejemplo.com"
+              className="w-full pl-10 px-4 py-3 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
+              aria-required="true"
+              aria-invalid={errors.clientEmail ? 'true' : 'false'}
+              aria-describedby={errors.clientEmail ? 'clientEmail-error' : undefined}
+              {...register('clientEmail', {
+                required: 'El correo es obligatorio',
+                pattern: { value: /.+@.+\..+/, message: 'Correo inválido' }
+              })}
+              onBlur={handleEmailBlur}
+            />
+          </div>
+          {errors.clientEmail && (
+            <p id="clientEmail-error" className="text-sm text-destructive mt-1">{errors.clientEmail.message as string}</p>
+          )}
+        </div>
+
         <div>
           <label htmlFor="clientName" className="text-sm font-medium text-foreground">Nombre y Apellido</label>
           <div className="relative mt-1">
@@ -90,30 +133,6 @@ export default function BookingForm({ professionalId, selectedService, selectedS
           </div>
           {errors.clientName && (
             <p id="clientName-error" className="text-sm text-destructive mt-1">{errors.clientName.message as string}</p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="clientEmail" className="text-sm font-medium text-foreground">Correo Electrónico</label>
-          <div className="relative mt-1">
-            <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-            <input
-              type="email"
-              id="clientEmail"
-              autoComplete="email"
-              placeholder="nombre@ejemplo.com"
-              className="w-full pl-10 px-4 py-3 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
-              aria-required="true"
-              aria-invalid={errors.clientEmail ? 'true' : 'false'}
-              aria-describedby={errors.clientEmail ? 'clientEmail-error' : undefined}
-              {...register('clientEmail', {
-                required: 'El correo es obligatorio',
-                pattern: { value: /.+@.+\..+/, message: 'Correo inválido' }
-              })}
-            />
-          </div>
-          {errors.clientEmail && (
-            <p id="clientEmail-error" className="text-sm text-destructive mt-1">{errors.clientEmail.message as string}</p>
           )}
         </div>
 

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { DayPicker } from 'react-day-picker';
-import 'react-day-picker/dist/style.css';
+import { format, startOfWeek, addDays, addWeeks, isSameDay, startOfDay } from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
-import { format } from 'date-fns';
 import BookingForm from './BookingForm';
 import AppointmentSuccess from './AppointmentSuccess';
 
@@ -31,8 +29,12 @@ interface Props {
  */
 export default function Scheduler({ professional, services }: Props) {
   // Estados
+  const weekdays = ['lu', 'ma', 'mi', 'ju', 'vi', 'sá', 'do'];
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined);
+  const [currentWeek, setCurrentWeek] = useState<Date>(
+    startOfWeek(new Date(), { weekStartsOn: 1 })
+  );
   const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
   const [availableSlots, setAvailableSlots] = useState<Date[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +46,7 @@ export default function Scheduler({ professional, services }: Props) {
     slot: Date;
     sessionType: string;
   } | null>(null);
+  const today = startOfDay(new Date());
 
   const steps = ['Servicio', 'Horario', 'Datos'];
   const currentStep = !selectedService ? 1 : showForm ? 3 : 2;
@@ -115,8 +118,18 @@ export default function Scheduler({ professional, services }: Props) {
   const handleDaySelect = (date: Date | undefined) => {
     if (date) {
       setSelectedDay(date);
+      setSelectedSlot(null);
+      setAvailableSlots([]);
       setBookingSuccess(false);
     }
+  };
+
+  const changeWeek = (weeks: number) => {
+    const newWeek = addWeeks(currentWeek, weeks);
+    setCurrentWeek(newWeek);
+    setSelectedDay(undefined);
+    setSelectedSlot(null);
+    setAvailableSlots([]);
   };
 
   const handleSlotSelect = (slot: Date) => {
@@ -232,35 +245,56 @@ export default function Scheduler({ professional, services }: Props) {
 
         {/* Calendario y horarios */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6 items-start mb-6">
-          <div className="bg-card p-3 rounded-xl shadow-sm border flex justify-center">
-            <DayPicker
-              mode="single"
-              selected={selectedDay}
-              onSelect={handleDaySelect}
-              locale={es}
-              fromDate={new Date()}
-              classNames={{
-                months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
-                month: 'space-y-4',
-                caption: 'flex justify-center pt-1 relative items-center',
-                caption_label: 'text-sm font-medium',
-                nav: 'space-x-1 flex items-center',
-                nav_button: 'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100',
-                table: 'w-full border-collapse space-y-1',
-                head_row: 'flex',
-                head_cell: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
-                row: 'flex w-full mt-2',
-                cell:
-                  'h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-primary/90 first:[&:has([aria-selected])]:rounded-l-lg last:[&:has([aria-selected])]:rounded-r-lg focus-within:relative focus-within:z-20',
-                day: 'h-9 w-9 p-0 font-normal aria-selected:opacity-100',
-                day_selected:
-                  'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-lg',
-                day_today: 'bg-muted text-foreground',
-                day_outside: 'text-muted-foreground opacity-50',
-                day_disabled: 'text-muted-foreground opacity-50',
-                day_hidden: 'invisible',
-              }}
-            />
+          <div className="bg-card p-3 rounded-xl shadow-sm border">
+            <div className="flex flex-col items-center">
+              <div className="flex items-center justify-between w-full mb-2">
+                <button
+                  onClick={() => changeWeek(-1)}
+                  className="p-1 text-primary rounded hover:bg-muted"
+                  aria-label="Semana anterior"
+                >
+                  ‹
+                </button>
+                <span className="text-sm font-medium capitalize">
+                  {format(currentWeek, 'MMMM yyyy', { locale: es })}
+                </span>
+                <button
+                  onClick={() => changeWeek(1)}
+                  className="p-1 text-primary rounded hover:bg-muted"
+                  aria-label="Semana siguiente"
+                >
+                  ›
+                </button>
+              </div>
+              <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground mb-2 w-full">
+                {weekdays.map((d) => (
+                  <span key={d} className="capitalize">
+                    {d}
+                  </span>
+                ))}
+              </div>
+              <div className="grid grid-cols-7 gap-1 w-full">
+                {Array.from({ length: 7 }).map((_, i) => {
+                  const day = addDays(currentWeek, i);
+                  const disabled = day < today;
+                  const selected = selectedDay && isSameDay(day, selectedDay);
+                  return (
+                    <button
+                      key={i}
+                      disabled={disabled}
+                      onClick={() => handleDaySelect(day)}
+                      className={`h-9 w-full rounded-lg text-sm flex items-center justify-center border transition-colors ${
+                        selected
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'bg-background text-foreground border-muted hover:bg-primary hover:text-primary-foreground'
+                      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      {format(day, 'd')}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           <div>

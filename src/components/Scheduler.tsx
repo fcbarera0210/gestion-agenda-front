@@ -162,17 +162,17 @@ export default function Scheduler({ professional, services }: Props) {
     return (
       <div className="w-full">
         <Stepper />
-        <div className="mb-6 flex items-start justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-bold text-foreground">1. Selecciona un servicio</h2>
-            <p className="text-muted-foreground mt-1">Elige uno para ver los horarios disponibles.</p>
-          </div>
-          <a
-            href="/"
-            className="text-sm text-primary hover:underline font-semibold whitespace-nowrap mt-1"
-          >
-            Inicio
-          </a>
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-bold text-foreground">Agenda tu atención</h1>
+          <p className="text-muted-foreground mt-1">
+            Sigue los pasos para completar tu reserva.
+          </p>
+        </div>
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-foreground">1. Selecciona un servicio</h2>
+          <p className="text-muted-foreground mt-1">
+            Elige uno para ver los horarios disponibles.
+          </p>
         </div>
         <div className="space-y-4">
           {services.map((service) => (
@@ -198,6 +198,14 @@ export default function Scheduler({ professional, services }: Props) {
               </button>
             </div>
           ))}
+        </div>
+        <div className="flex justify-start pt-6">
+          <a
+            href="/"
+            className="flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg border text-foreground hover:bg-muted transition-colors"
+          >
+            Volver al inicio
+          </a>
         </div>
       </div>
     );

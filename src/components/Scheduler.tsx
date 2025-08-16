@@ -231,7 +231,7 @@ export default function Scheduler({ professional, services }: Props) {
         </div>
 
         {/* Calendario y horarios */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6 items-start mb-6">
           <div className="bg-card p-3 rounded-xl shadow-sm border flex justify-center">
             <DayPicker
               mode="single"
@@ -266,11 +266,11 @@ export default function Scheduler({ professional, services }: Props) {
           <div>
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-foreground mb-2">Tipo de sesión</h3>
-              <div className="flex gap-2" role="radiogroup" aria-label="Tipo de sesión">
+              <div className="flex gap-2 w-full" role="radiogroup" aria-label="Tipo de sesión">
                 {['PRESENCIAL', 'ONLINE'].map((type) => (
                   <label
                     key={type}
-                    className={`px-4 py-2 rounded-lg border font-semibold cursor-pointer ${
+                    className={`flex-1 px-4 py-2 text-center rounded-lg border font-semibold cursor-pointer ${
                       sessionType === type
                         ? 'bg-primary text-primary-foreground border-primary'
                         : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
@@ -292,7 +292,7 @@ export default function Scheduler({ professional, services }: Props) {
 
             <div>
               <h3 className="text-lg font-semibold text-foreground mb-2">Horas disponibles</h3>
-              <div className="p-2 border rounded-xl h-72 overflow-y-auto bg-muted">
+              <div className="p-2 border rounded-xl max-h-80 overflow-y-auto bg-muted">
                 {isLoading && (
                   <p className="text-muted-foreground text-center pt-4 animate-pulse">Buscando...</p>
                 )}
@@ -301,7 +301,7 @@ export default function Scheduler({ professional, services }: Props) {
                     {selectedDay ? 'No hay horarios disponibles.' : 'Selecciona un día.'}
                   </p>
                 )}
-                <div className="grid grid-cols-3 gap-2 p-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 p-2">
                   {!isLoading &&
                     availableSlots.map((slot, index) => (
                       <button

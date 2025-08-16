@@ -46,6 +46,7 @@ export default function Scheduler({ professional, services }: Props) {
     slot: Date;
     sessionType: string;
   } | null>(null);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const today = startOfDay(new Date());
 
   const steps = ['Servicio', 'Horario', 'Datos'];
@@ -74,35 +75,39 @@ export default function Scheduler({ professional, services }: Props) {
     </div>
   );
 
+  const fetchAvailability = async () => {
+    if (!selectedDay || !selectedService) return;
+    setFetchError(null);
+    setIsLoading(true);
+    setAvailableSlots([]);
+    setSelectedSlot(null);
+    try {
+      const response = await fetch('/api/availability', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          date: selectedDay.toISOString(),
+          professionalId: professional.id,
+          serviceId: selectedService.id,
+        }),
+      });
+      if (!response.ok) throw new Error('Error al buscar disponibilidad');
+      const slots: string[] = await response.json();
+      setAvailableSlots(slots.map((slot) => new Date(slot)));
+    } catch (error) {
+      console.error(error);
+      setFetchError('No se pudo obtener la disponibilidad. Intenta nuevamente.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Buscar disponibilidad cuando cambia día o servicio
   useEffect(() => {
     if (!selectedDay || !selectedService) {
       setAvailableSlots([]);
       return;
     }
-    const fetchAvailability = async () => {
-      setIsLoading(true);
-      setAvailableSlots([]);
-      setSelectedSlot(null);
-      try {
-        const response = await fetch('/api/availability', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            date: selectedDay.toISOString(),
-            professionalId: professional.id,
-            serviceId: selectedService.id,
-          }),
-        });
-        if (!response.ok) throw new Error('Error al buscar disponibilidad');
-        const slots: string[] = await response.json();
-        setAvailableSlots(slots.map((slot) => new Date(slot)));
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchAvailability();
   }, [selectedDay, selectedService, professional.id]);
 
@@ -344,13 +349,24 @@ export default function Scheduler({ professional, services }: Props) {
               {isLoading && (
                 <p className="text-muted-foreground text-center pt-4 animate-pulse">Buscando...</p>
               )}
-              {!isLoading && availableSlots.length === 0 && (
+              {fetchError && (
+                <div className="text-center pt-4">
+                  <p className="text-destructive mb-2">{fetchError}</p>
+                  <button
+                    onClick={fetchAvailability}
+                    className="text-primary font-semibold hover:underline"
+                  >
+                    Reintentar
+                  </button>
+                </div>
+              )}
+              {!isLoading && !fetchError && availableSlots.length === 0 && (
                 <p className="text-muted-foreground text-center pt-4">
                   {selectedDay ? 'No hay horarios disponibles.' : 'Selecciona un día.'}
                 </p>
               )}
               <div className="grid grid-cols-2 gap-2 p-2">
-                {!isLoading &&
+                {!isLoading && !fetchError &&
                   availableSlots.map((slot, index) => (
                     <button
                       key={index}

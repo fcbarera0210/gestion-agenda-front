@@ -162,9 +162,17 @@ export default function Scheduler({ professional, services }: Props) {
     return (
       <div className="w-full">
         <Stepper />
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-foreground">1. Selecciona un servicio</h2>
-          <p className="text-muted-foreground mt-1">Elige uno para ver los horarios disponibles.</p>
+        <div className="mb-6 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-foreground">1. Selecciona un servicio</h2>
+            <p className="text-muted-foreground mt-1">Elige uno para ver los horarios disponibles.</p>
+          </div>
+          <a
+            href="/"
+            className="text-sm text-primary hover:underline font-semibold whitespace-nowrap mt-1"
+          >
+            Inicio
+          </a>
         </div>
         <div className="space-y-4">
           {services.map((service) => (

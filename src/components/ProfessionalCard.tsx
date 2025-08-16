@@ -10,7 +10,7 @@ export default function ProfessionalCard({ id, displayName, title, photoURL }: P
   return (
     <a
       href={`/agendar/${id}`}
-      className="flex items-center gap-4 p-4 bg-card rounded-xl shadow hover:shadow-lg transition"
+      className="flex items-center gap-4 p-4 bg-card rounded-xl shadow-sm border transition hover:shadow-md hover:border-primary"
     >
       <img
         src={photoURL || '/avatar.svg'}

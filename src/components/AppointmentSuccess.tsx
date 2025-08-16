@@ -21,42 +21,10 @@ interface Props {
   service: Service;
   slot: Date;
   sessionType: string;
+  onRestart: () => void;
 }
 
-export default function AppointmentSuccess({ professional, service, slot, sessionType }: Props) {
-  const handleAddToCalendar = () => {
-    const end = new Date(slot.getTime() + service.duration * 60000);
-    const ics = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'BEGIN:VEVENT',
-      `DTSTART:${format(slot, "yyyyMMdd'T'HHmmss")}`,
-      `DTEND:${format(end, "yyyyMMdd'T'HHmmss")}`,
-      `SUMMARY:${service.name}`,
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ].join('\r\n');
-    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'cita.ics';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
-  const handleShare = async () => {
-    const text = `Cita con ${professional.displayName} el ${format(slot, "eeee d 'de' MMMM 'a las' HH:mm", { locale: es })} (${sessionType})`;
-    try {
-      await navigator.clipboard.writeText(text);
-      alert('Cita copiada al portapapeles');
-    } catch (err) {
-      alert('No se pudo copiar la cita');
-    }
-  };
-
+export default function AppointmentSuccess({ professional, service, slot, sessionType, onRestart }: Props) {
   return (
     <div className="w-full flex justify-center">
       <div className="max-w-md text-center bg-card p-8 rounded-xl border shadow-sm">
@@ -70,18 +38,12 @@ export default function AppointmentSuccess({ professional, service, slot, sessio
           <p><span className="font-semibold">Duración:</span> {service.duration} min</p>
           <p><span className="font-semibold">Costo:</span> {service.price > 0 ? `$${service.price.toLocaleString('es-CL')}` : 'Gratis'}</p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+        <div className="flex justify-center mt-6">
           <button
-            onClick={handleAddToCalendar}
+            onClick={onRestart}
             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
           >
-            Agregar al calendario
-          </button>
-          <button
-            onClick={handleShare}
-            className="px-4 py-2 rounded-lg border border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-          >
-            Compartir cita
+            Volver al inicio
           </button>
         </div>
       </div>

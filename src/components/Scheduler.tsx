@@ -145,6 +145,19 @@ export default function Scheduler({ professional, services }: Props) {
     setBookingSuccess(true);
   };
 
+  const handleRestart = () => {
+    setSelectedService(null);
+    setSelectedDay(undefined);
+    setCurrentWeek(startOfWeek(new Date(), { weekStartsOn: 1 }));
+    setSelectedSlot(null);
+    setAvailableSlots([]);
+    setIsLoading(false);
+    setBookingSuccess(false);
+    setSessionType('PRESENCIAL');
+    setShowForm(false);
+    setBookingDetails(null);
+  };
+
   // Vista de éxito
   if (bookingSuccess && bookingDetails) {
     return (
@@ -153,6 +166,7 @@ export default function Scheduler({ professional, services }: Props) {
         service={bookingDetails.service}
         slot={bookingDetails.slot}
         sessionType={bookingDetails.sessionType}
+        onRestart={handleRestart}
       />
     );
   }

@@ -9,7 +9,6 @@ import {
   addMinutes,
   isBefore,
   isAfter,
-  isEqual,
   startOfDay,
   endOfDay
 } from 'date-fns';

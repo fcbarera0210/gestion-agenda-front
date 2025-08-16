@@ -31,12 +31,20 @@ export default function AppointmentSuccess({ professional, service, slot, sessio
         <img src="/check-success.svg" alt="Éxito" className="w-16 h-16 mx-auto mb-4" />
         <h2 className="text-2xl font-bold mb-2 text-foreground">¡Cita agendada!</h2>
         <p className="mb-4 text-muted-foreground">
-          Tu cita con {professional.displayName} está confirmada para {format(slot, "eeee d 'de' MMMM 'a las' HH:mm", { locale: es })}.
+          Tu cita con {professional.displayName} está confirmada para{' '}
+          {format(slot, "eeee d 'de' MMMM 'a las' HH:mm", { locale: es })}.
         </p>
         <div className="text-left space-y-1 text-foreground">
-          <p><span className="font-semibold">Ubicación:</span> {sessionType}</p>
-          <p><span className="font-semibold">Duración:</span> {service.duration} min</p>
-          <p><span className="font-semibold">Costo:</span> {service.price > 0 ? `$${service.price.toLocaleString('es-CL')}` : 'Gratis'}</p>
+          <p>
+            <span className="font-semibold">Ubicación:</span> {sessionType}
+          </p>
+          <p>
+            <span className="font-semibold">Duración:</span> {service.duration} min
+          </p>
+          <p>
+            <span className="font-semibold">Costo:</span>{' '}
+            {service.price > 0 ? `$${service.price.toLocaleString('es-CL')}` : 'Gratis'}
+          </p>
         </div>
         <div className="mt-6">
           <button
@@ -50,3 +58,4 @@ export default function AppointmentSuccess({ professional, service, slot, sessio
     </div>
   );
 }
+

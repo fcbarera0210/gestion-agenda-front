@@ -162,14 +162,8 @@ export default function Scheduler({ professional, services }: Props) {
     return (
       <div className="w-full">
         <Stepper />
-        <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-foreground">Agenda tu atención</h1>
-          <p className="text-muted-foreground mt-1">
-            Sigue los pasos para completar tu reserva.
-          </p>
-        </div>
         <div className="mb-6">
-          <h2 className="text-xl font-bold text-foreground">1. Selecciona un servicio</h2>
+          <h2 className="text-xl font-bold text-foreground">Selecciona un servicio</h2>
           <p className="text-muted-foreground mt-1">
             Elige uno para ver los horarios disponibles.
           </p>
@@ -232,7 +226,7 @@ export default function Scheduler({ professional, services }: Props) {
       <div className="w-full">
         <Stepper />
         <div className="mb-6">
-          <h2 className="text-xl font-bold text-foreground">2. Elige un día y una hora</h2>
+          <h2 className="text-xl font-bold text-foreground">Elige un día y una hora</h2>
           <p className="text-muted-foreground mt-1">
             Elige uno de los servicios a continuación para ver los horarios disponibles.
           </p>

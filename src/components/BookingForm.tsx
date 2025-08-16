@@ -55,7 +55,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
 
   return (
     <div className="mt-8 pt-6 max-w-xl mx-auto">
-      <h2 className="text-2xl font-bold text-foreground mb-2">3. Confirma tus datos</h2>
+      <h2 className="text-2xl font-bold text-foreground mb-2">Confirma tus datos</h2>
       <p className="text-muted-foreground mb-6">
         Revisa y completa tu información para confirmar la reserva.
       </p>

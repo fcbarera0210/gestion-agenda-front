@@ -53,19 +53,19 @@ export default function BookingForm({ professionalId, selectedService, selectedS
   };
 
   return (
-    <div className="mt-8 pt-6 border-t">
-      <h2 className="text-2xl font-bold text-foreground mb-2">3. Confirma tus datos</h2>
-      <div className="p-6 border rounded-xl bg-card mt-4">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <div className="mt-8 pt-6 border-t max-w-xl mx-auto">
+      <h2 className="text-2xl font-bold text-foreground mb-6 text-center">3. Confirma tus datos</h2>
+      <div className="p-6 border rounded-xl bg-card shadow-lg">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="relative">
-            <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
             <label htmlFor="clientName" className="text-sm font-medium text-foreground">Nombre y Apellido</label>
             <input
               type="text"
               id="clientName"
               autoComplete="name"
               placeholder="Ingresa tu nombre"
-              className="w-full pl-10 px-4 py-3 mt-1 bg-muted rounded-lg text-foreground"
+              className="w-full pl-10 px-4 py-3 mt-1 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
               aria-required="true"
               aria-invalid={errors.clientName ? 'true' : 'false'}
               aria-describedby={errors.clientName ? 'clientName-error' : undefined}
@@ -79,16 +79,16 @@ export default function BookingForm({ professionalId, selectedService, selectedS
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="relative">
-              <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
               <label htmlFor="clientEmail" className="text-sm font-medium text-foreground">Correo Electrónico</label>
               <input
                 type="email"
                 id="clientEmail"
                 autoComplete="email"
                 placeholder="nombre@ejemplo.com"
-                className="w-full pl-10 px-4 py-3 mt-1 bg-muted rounded-lg text-foreground"
+                className="w-full pl-10 px-4 py-3 mt-1 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
                 aria-required="true"
                 aria-invalid={errors.clientEmail ? 'true' : 'false'}
                 aria-describedby={errors.clientEmail ? 'clientEmail-error' : undefined}
@@ -103,14 +103,14 @@ export default function BookingForm({ professionalId, selectedService, selectedS
             </div>
 
             <div className="relative">
-              <FaPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <FaPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
               <label htmlFor="clientPhone" className="text-sm font-medium text-foreground">Teléfono (Opcional)</label>
               <input
                 type="tel"
                 id="clientPhone"
                 autoComplete="tel"
                 placeholder="Ej: 555123456"
-                className="w-full pl-10 px-4 py-3 mt-1 bg-muted rounded-lg text-foreground"
+                className="w-full pl-10 px-4 py-3 mt-1 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
                 aria-required="false"
                 aria-invalid={errors.clientPhone ? 'true' : 'false'}
                 aria-describedby={errors.clientPhone ? 'clientPhone-error' : undefined}
@@ -131,16 +131,16 @@ export default function BookingForm({ professionalId, selectedService, selectedS
               rows={3}
               autoComplete="off"
               placeholder="Información adicional"
-              className="w-full px-4 py-3 mt-1 bg-muted rounded-lg text-foreground"
+              className="w-full px-4 py-3 mt-1 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
               {...register('notes')}
             ></textarea>
           </div>
 
-          <div className="flex justify-end pt-4">
+          <div className="flex justify-end pt-6">
             <button
               type="submit"
               disabled={!isValid || isSubmitting}
-              className="flex items-center justify-center w-48 px-6 py-3 font-semibold rounded-lg shadow-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-primary/50"
+              className="flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg shadow-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isSubmitting ? 'Agendando...' : 'Realizar Reserva'}
             </button>

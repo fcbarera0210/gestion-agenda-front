@@ -1,3 +1,5 @@
+import { motion, useReducedMotion } from "framer-motion";
+
 interface Props {
   id: string;
   displayName: string;
@@ -7,10 +9,18 @@ interface Props {
 
 // Card displaying a professional and linking to their scheduling page
 export default function ProfessionalCard({ id, displayName, title, photoURL }: Props) {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
-    <a
+    <motion.a
       href={`/agendar/${id}`}
-      className="flex items-center gap-4 p-4 bg-card rounded-xl shadow-sm border transition hover:shadow-md hover:border-primary"
+      data-astro-transition="fade"
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+      animate={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
+      whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
+      whileFocus={shouldReduceMotion ? {} : { scale: 1.02 }}
+      transition={{ duration: 0.3 }}
+      className="flex items-center gap-4 p-4 bg-card rounded-xl border shadow-sm motion-safe:transition-shadow motion-safe:hover:shadow-md motion-safe:focus:shadow-md"
     >
       <img
         src={photoURL || '/doctor-placeholder.png'}
@@ -21,6 +31,6 @@ export default function ProfessionalCard({ id, displayName, title, photoURL }: P
         <h2 className="text-lg font-bold text-foreground">{displayName}</h2>
         <p className="text-sm text-muted-foreground">{title}</p>
       </div>
-    </a>
+    </motion.a>
   );
 }

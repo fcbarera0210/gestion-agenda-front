@@ -37,9 +37,13 @@ import { createRipple, rippleClasses } from '../utils/ripple';
             <a
               href="/profesionales"
               transition:animate="fade"
-              on:click={createRipple}
+              on:click={(e) => {
+                createRipple(e);
+                e.preventDefault();
+                setTimeout(() => { window.location.href = '/profesionales'; }, 150);
+              }}
               class={
-                `${rippleClasses} px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors`
+                `${rippleClasses} px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors cursor-pointer`
               }
             >
               Reservar hora

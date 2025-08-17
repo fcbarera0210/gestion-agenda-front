@@ -1,13 +1,11 @@
 ---
-import { createRipple, rippleClasses } from '../utils/ripple';
+import { rippleClasses } from '../utils/ripple';
 ---
 <button
   id="theme-toggle"
   type="button"
   aria-label="Cambiar tema"
-  class={
-    `${rippleClasses} text-2xl cursor-default hover:cursor-pointer p-2 rounded-lg`
-  }
+  class={`${rippleClasses} text-2xl p-2 rounded-lg cursor-pointer`}
 >
   <svg
     id="theme-icon"
@@ -30,7 +28,9 @@ import { createRipple, rippleClasses } from '../utils/ripple';
     <path d="M12 5a7 7 0 0 0 7 7 7 7 0 0 1-7 7 7 7 0 0 1 0-14z" />
   </svg>
 </button>
-<script>
+<script type="module">
+  import { createRipple } from '../utils/ripple';
+
   const btn = document.getElementById('theme-toggle');
   const icon = document.getElementById('theme-icon');
 

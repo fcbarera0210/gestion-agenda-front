@@ -202,7 +202,7 @@ export default function Scheduler({ professional, services }: Props) {
                       createRipple(e);
                       handleSelectService(service);
                     }}
-                    className={`${rippleClasses} bg-primary text-primary-foreground font-semibold px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors`}
+                    className={`${rippleClasses} bg-primary text-primary-foreground font-semibold px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors cursor-pointer`}
                   >
                     Elegir
                   </button>
@@ -261,7 +261,7 @@ export default function Scheduler({ professional, services }: Props) {
                   createRipple(e);
                   handleSelectService(null);
                 }}
-                className={`${rippleClasses} text-primary hover:underline`}
+                className={`${rippleClasses} text-primary hover:underline cursor-pointer`}
               >
                 Cambiar
               </button>
@@ -276,7 +276,7 @@ export default function Scheduler({ professional, services }: Props) {
                       createRipple(e);
                       changeWeek(-1);
                     }}
-                    className={`${rippleClasses} p-1 text-primary rounded hover:bg-muted`}
+                    className={`${rippleClasses} p-1 text-primary rounded hover:bg-muted cursor-pointer`}
                     aria-label="Semana anterior"
                   >
                     ‹
@@ -289,7 +289,7 @@ export default function Scheduler({ professional, services }: Props) {
                       createRipple(e);
                       changeWeek(1);
                     }}
-                    className={`${rippleClasses} p-1 text-primary rounded hover:bg-muted`}
+                    className={`${rippleClasses} p-1 text-primary rounded hover:bg-muted cursor-pointer`}
                     aria-label="Semana siguiente"
                   >
                     ›
@@ -328,7 +328,7 @@ export default function Scheduler({ professional, services }: Props) {
                                 createRipple(e);
                                 handleDaySelect(day);
                               }}
-                              className={`${rippleClasses} h-9 w-full rounded-lg text-sm flex items-center justify-center border transition-colors ${
+                            className={`${rippleClasses} h-9 w-full rounded-lg text-sm flex items-center justify-center border transition-colors cursor-pointer ${
                                 selected
                                   ? 'bg-primary text-primary-foreground border-primary'
                                   : 'bg-background text-foreground border-muted hover:bg-primary hover:text-primary-foreground'
@@ -357,7 +357,8 @@ export default function Scheduler({ professional, services }: Props) {
                   {['PRESENCIAL', 'ONLINE'].map((type) => (
                     <label
                       key={type}
-                      className={`flex-1 px-4 py-2 text-center rounded-lg border font-semibold cursor-pointer ${
+                      onClick={createRipple}
+                      className={`${rippleClasses} flex-1 px-4 py-2 text-center rounded-lg border font-semibold cursor-pointer ${
                         sessionType === type
                           ? 'bg-primary text-primary-foreground border-primary'
                           : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
@@ -391,7 +392,7 @@ export default function Scheduler({ professional, services }: Props) {
                           createRipple(e);
                           fetchAvailability();
                         }}
-                        className={`${rippleClasses} text-primary font-semibold hover:underline`}
+                        className={`${rippleClasses} text-primary font-semibold hover:underline cursor-pointer`}
                       >
                         Reintentar
                       </button>
@@ -413,7 +414,7 @@ export default function Scheduler({ professional, services }: Props) {
                               createRipple(e);
                               handleSlotSelect(slot);
                             }}
-                            className={`${rippleClasses} w-full p-2 rounded-lg text-center font-semibold whitespace-nowrap transition-colors border ${
+                            className={`${rippleClasses} w-full p-2 rounded-lg text-center font-semibold whitespace-nowrap transition-colors border cursor-pointer ${
                               isSelected
                                 ? 'bg-primary text-primary-foreground border-primary shadow-md'
                                 : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
@@ -442,7 +443,7 @@ export default function Scheduler({ professional, services }: Props) {
                     createRipple(e);
                     setShowForm(true);
                   }}
-                  className={`${rippleClasses} w-full px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90`}
+                  className={`${rippleClasses} w-full px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer`}
                 >
                   Continuar
                 </button>

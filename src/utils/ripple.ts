@@ -1,8 +1,11 @@
-import React from 'react';
+import type React from 'react';
 
-export const rippleClasses = 'relative overflow-hidden motion-safe:transition-transform motion-safe:hover:scale-105 motion-safe:active:scale-95';
+export const rippleClasses =
+  'relative overflow-hidden motion-safe:transition-transform motion-safe:hover:scale-105 motion-safe:active:scale-95';
 
-export function createRipple(event: React.MouseEvent<HTMLElement>): void {
+export function createRipple(
+  event: React.MouseEvent<HTMLElement> | MouseEvent
+): void {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const button = event.currentTarget as HTMLElement & { disabled?: boolean };
   if (button.disabled) return;

@@ -1,10 +1,13 @@
 ---
+import { createRipple, rippleClasses } from '../utils/ripple';
 ---
 <button
   id="theme-toggle"
   type="button"
   aria-label="Cambiar tema"
-  class="text-2xl cursor-default hover:cursor-pointer"
+  class={
+    `${rippleClasses} text-2xl cursor-default hover:cursor-pointer p-2 rounded-lg`
+  }
 >
   <svg
     id="theme-icon"
@@ -35,7 +38,8 @@
     icon?.classList.toggle('rotate-180', document.documentElement.classList.contains('dark'));
   syncIcon();
 
-  btn?.addEventListener('click', () => {
+  btn?.addEventListener('click', (e) => {
+    createRipple(e);
     const isDark = document.documentElement.classList.toggle('dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     syncIcon();

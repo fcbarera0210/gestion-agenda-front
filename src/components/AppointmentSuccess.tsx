@@ -1,6 +1,7 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { motion, useReducedMotion } from 'framer-motion';
 
 interface Service {
   id: string;
@@ -31,10 +32,23 @@ export default function AppointmentSuccess({
   sessionType,
   onRestart,
 }: Props) {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <div className="w-full flex justify-center">
-      <div className="max-w-md text-center bg-card p-8 rounded-xl border shadow-sm">
-        <img src="/check-success.svg" alt="Éxito" className="w-16 h-16 mx-auto mb-4" />
+      <motion.div
+        className="max-w-md text-center bg-card p-8 rounded-xl border shadow-sm"
+        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.95 }}
+        animate={shouldReduceMotion ? {} : { opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <motion.img
+          src="/check-success.svg"
+          alt="Éxito"
+          className="w-16 h-16 mx-auto mb-4"
+          initial={shouldReduceMotion ? false : { scale: 0, rotate: -180 }}
+          animate={shouldReduceMotion ? {} : { scale: 1, rotate: 0 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        />
         <h2 className="text-2xl font-bold mb-2 text-foreground">¡Cita agendada!</h2>
         <p className="mb-4 text-muted-foreground">
           Tu cita con {professional.displayName} está confirmada para{' '}
@@ -62,7 +76,7 @@ export default function AppointmentSuccess({
             Volver al inicio
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

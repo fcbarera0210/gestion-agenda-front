@@ -4,6 +4,7 @@ import { functions, db } from '../firebase/client';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
 import { FaUser, FaEnvelope, FaPhone } from 'react-icons/fa';
+import { createRipple, rippleClasses } from '../utils/ripple';
 
 interface Service {
   id: string;
@@ -76,30 +77,6 @@ export default function BookingForm({ professionalId, selectedService, selectedS
     } catch (err) {
       console.error('Error al buscar cliente:', err);
     }
-  };
-
-  const prefersReducedMotion = React.useRef(false);
-
-  React.useEffect(() => {
-    prefersReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }, []);
-
-  const createRipple = (event: React.MouseEvent<HTMLElement>): void => {
-    if (prefersReducedMotion.current) return;
-    const button = event.currentTarget as HTMLElement & { disabled?: boolean };
-    if (button.disabled) return;
-    const circle = document.createElement('span');
-    const diameter = Math.max(button.clientWidth, button.clientHeight);
-    const radius = diameter / 2;
-    circle.style.width = circle.style.height = `${diameter}px`;
-    circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
-    circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
-    circle.className = 'ripple';
-    const ripple = button.getElementsByClassName('ripple')[0];
-    if (ripple) {
-      ripple.remove();
-    }
-    button.appendChild(circle);
   };
 
   return (
@@ -199,7 +176,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
           <button
             type="button"
             onClick={(e) => { createRipple(e); onBack(); }}
-            className="relative overflow-hidden flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg border text-foreground cursor-pointer hover:bg-muted transition-colors motion-safe:transition-transform motion-safe:hover:scale-105 motion-safe:active:scale-95"
+            className={`${rippleClasses} flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg border text-foreground cursor-pointer hover:bg-muted transition-colors`}
           >
             Volver
           </button>
@@ -207,7 +184,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
             type="submit"
             onClick={createRipple}
             disabled={!isValid || isSubmitting}
-            className="relative overflow-hidden flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg shadow-md bg-primary text-primary-foreground cursor-pointer hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors motion-safe:transition-transform motion-safe:hover:scale-105 motion-safe:active:scale-95"
+            className={`${rippleClasses} flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg shadow-md bg-primary text-primary-foreground cursor-pointer hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors`}
           >
             {isSubmitting ? 'Agendando...' : 'Realizar Reserva'}
           </button>

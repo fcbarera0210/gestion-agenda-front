@@ -77,6 +77,15 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
+
+  html {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  html.fade-out {
+    opacity: 0;
+  }
 }
 
 @layer utilities {

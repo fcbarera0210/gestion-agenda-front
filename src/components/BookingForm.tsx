@@ -199,7 +199,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
           <button
             type="button"
             onClick={(e) => { createRipple(e); onBack(); }}
-            className="relative overflow-hidden flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg border text-foreground hover:bg-muted transition-colors motion-safe:transition-transform motion-safe:active:scale-95"
+            className="relative overflow-hidden flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg border text-foreground cursor-pointer hover:bg-muted transition-colors motion-safe:transition-transform motion-safe:hover:scale-105 motion-safe:active:scale-95"
           >
             Volver
           </button>
@@ -207,7 +207,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
             type="submit"
             onClick={createRipple}
             disabled={!isValid || isSubmitting}
-            className="relative overflow-hidden flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg shadow-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors motion-safe:transition-transform motion-safe:active:scale-95"
+            className="relative overflow-hidden flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg shadow-md bg-primary text-primary-foreground cursor-pointer hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors motion-safe:transition-transform motion-safe:hover:scale-105 motion-safe:active:scale-95"
           >
             {isSubmitting ? 'Agendando...' : 'Realizar Reserva'}
           </button>

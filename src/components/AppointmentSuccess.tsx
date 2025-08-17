@@ -71,7 +71,7 @@ export default function AppointmentSuccess({
         <div className="mt-6">
           <button
             onClick={onRestart}
-            className="w-full px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+            className="w-full px-4 py-2 rounded-lg bg-primary text-primary-foreground cursor-pointer hover:bg-primary/90 motion-safe:transition-transform motion-safe:hover:scale-105 motion-safe:active:scale-95"
           >
             Volver al inicio
           </button>

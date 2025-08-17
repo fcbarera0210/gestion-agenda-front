@@ -70,6 +70,9 @@ const professionals: Professional[] = snapshot.docs.map(doc => {
           </div>
         </header>
         <div class="p-6 space-y-4">
+          <p class="text-sm text-muted-foreground">
+            Selecciona un profesional para continuar con el formulario de reserva de hora.
+          </p>
           {professionals.map((professional) => (
             <ProfessionalCard
               key={professional.id}

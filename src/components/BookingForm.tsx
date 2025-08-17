@@ -3,7 +3,7 @@ import { httpsCallable } from 'firebase/functions';
 import { functions, db } from '../firebase/client';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
-import { FaUser, FaEnvelope, FaPhone } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaPhone, FaSpinner } from 'react-icons/fa';
 import { createRipple, rippleClasses } from '../utils/ripple';
 
 interface Service {
@@ -45,6 +45,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
   });
 
   const emailTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const [isSearching, setIsSearching] = React.useState(false);
 
   const handleEmailChange = (): void => {
     if (emailTimeoutRef.current) {
@@ -80,13 +81,18 @@ export default function BookingForm({ professionalId, selectedService, selectedS
 
   const handleEmailBlur = async (): Promise<void> => {
     const email = getValues('clientEmail').trim().toLowerCase();
-    if (!email || !professionalId) return;
+    if (!email || !professionalId) {
+      setIsSearching(false);
+      return;
+    }
+    setIsSearching(true);
     try {
       const clientsRef = collection(db, 'professionals', professionalId, 'clients');
       const q = query(clientsRef, where('email', '==', email));
       const snapshot = await getDocs(q);
       if (!snapshot.empty) {
         const client = snapshot.docs[0].data() as any;
+        console.log('Cliente encontrado:', client);
         setValue('clientName', client.name || '');
         setValue('clientPhone', client.phone || '');
       } else {
@@ -95,6 +101,8 @@ export default function BookingForm({ professionalId, selectedService, selectedS
       }
     } catch (err) {
       console.error('Error al buscar cliente:', err);
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -124,6 +132,9 @@ export default function BookingForm({ professionalId, selectedService, selectedS
               onChange={(e) => { emailField.onChange(e); handleEmailChange(); }}
               onBlur={(e) => { emailField.onBlur(e); handleEmailBlur(); }}
             />
+            {isSearching && (
+              <FaSpinner className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted-foreground pointer-events-none" />
+            )}
           </div>
           {errors.clientEmail && (
             <p id="clientEmail-error" className="text-sm text-destructive mt-1">{errors.clientEmail.message as string}</p>

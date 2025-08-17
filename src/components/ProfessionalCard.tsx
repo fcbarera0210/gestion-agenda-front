@@ -10,6 +10,7 @@ export default function ProfessionalCard({ id, displayName, title, photoURL }: P
   return (
     <a
       href={`/agendar/${id}`}
+      data-astro-transition="fade"
       className="flex items-center gap-4 p-4 bg-card rounded-xl shadow-sm border transition hover:shadow-md hover:border-primary"
     >
       <img

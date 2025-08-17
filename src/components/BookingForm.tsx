@@ -63,7 +63,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
   };
 
   const handleEmailBlur = async (): Promise<void> => {
-    const email = getValues('clientEmail');
+    const email = getValues('clientEmail').trim().toLowerCase();
     if (!email || !professionalId) return;
     try {
       const clientsRef = collection(db, 'professionals', professionalId, 'clients');
@@ -73,6 +73,9 @@ export default function BookingForm({ professionalId, selectedService, selectedS
         const client = snapshot.docs[0].data() as any;
         setValue('clientName', client.name || '');
         setValue('clientPhone', client.phone || '');
+      } else {
+        setValue('clientName', '');
+        setValue('clientPhone', '');
       }
     } catch (err) {
       console.error('Error al buscar cliente:', err);

@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import { createRipple, rippleClasses } from '../utils/ripple';
 ---
 
 <!doctype html>
@@ -36,7 +37,14 @@ import ThemeToggle from '../components/ThemeToggle.astro';
             <a
               href="/profesionales"
               transition:animate="fade"
-              class="px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors"
+              on:click={(e) => {
+                createRipple(e);
+                e.preventDefault();
+                setTimeout(() => { window.location.href = '/profesionales'; }, 150);
+              }}
+              class={
+                `${rippleClasses} px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors cursor-pointer`
+              }
             >
               Reservar hora
             </a>

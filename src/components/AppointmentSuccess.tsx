@@ -2,6 +2,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { motion, useReducedMotion } from 'framer-motion';
+import { createRipple, rippleClasses } from '../utils/ripple';
 
 interface Service {
   id: string;
@@ -70,8 +71,8 @@ export default function AppointmentSuccess({
 
         <div className="mt-6">
           <button
-            onClick={onRestart}
-            className="w-full px-4 py-2 rounded-lg bg-primary text-primary-foreground cursor-pointer hover:bg-primary/90 motion-safe:transition-transform motion-safe:hover:scale-105 motion-safe:active:scale-95"
+            onClick={(e) => { createRipple(e); onRestart(); }}
+            className={`${rippleClasses} w-full px-4 py-2 rounded-lg bg-primary text-primary-foreground cursor-pointer hover:bg-primary/90`}
           >
             Volver al inicio
           </button>

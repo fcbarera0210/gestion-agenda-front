@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { createRipple, rippleClasses } from "../utils/ripple";
 
 interface Props {
   id: string;
@@ -17,10 +18,9 @@ export default function ProfessionalCard({ id, displayName, title, photoURL }: P
       data-astro-transition="fade"
       initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
       animate={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
-      whileHover={shouldReduceMotion ? {} : { scale: 1.02 }}
-      whileFocus={shouldReduceMotion ? {} : { scale: 1.02 }}
       transition={{ duration: 0.3 }}
-      className="flex items-center gap-4 p-4 bg-card rounded-xl border shadow-sm motion-safe:transition-shadow motion-safe:hover:shadow-md motion-safe:focus:shadow-md"
+      onClick={createRipple}
+      className={`${rippleClasses} flex items-center gap-4 p-4 bg-card rounded-xl border shadow-sm motion-safe:transition-shadow motion-safe:hover:shadow-md motion-safe:focus:shadow-md`}
     >
       <img
         src={photoURL || '/doctor-placeholder.png'}

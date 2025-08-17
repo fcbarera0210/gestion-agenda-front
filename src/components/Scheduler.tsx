@@ -5,6 +5,7 @@ import BookingForm from './BookingForm';
 import AppointmentSuccess from './AppointmentSuccess';
 import Stepper from './Stepper';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { createRipple, rippleClasses } from '../utils/ripple';
 
 // Tipos de datos
 interface Service {
@@ -197,8 +198,11 @@ export default function Scheduler({ professional, services }: Props) {
                     </div>
                   </div>
                   <button
-                    onClick={() => handleSelectService(service)}
-                    className="bg-primary text-primary-foreground font-semibold px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+                    onClick={(e) => {
+                      createRipple(e);
+                      handleSelectService(service);
+                    }}
+                    className={`${rippleClasses} bg-primary text-primary-foreground font-semibold px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors cursor-pointer`}
                   >
                     Elegir
                   </button>
@@ -208,7 +212,8 @@ export default function Scheduler({ professional, services }: Props) {
             <div className="flex justify-start pt-6">
               <a
                 href="/profesionales"
-                className="flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg border text-foreground hover:bg-muted transition-colors"
+                onClick={createRipple}
+                className={`${rippleClasses} flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg border text-foreground hover:bg-muted transition-colors`}
               >
                 Volver al inicio
               </a>
@@ -252,8 +257,11 @@ export default function Scheduler({ professional, services }: Props) {
                 <p className="font-semibold text-foreground">{selectedService?.name}</p>
               </div>
               <button
-                onClick={() => handleSelectService(null)}
-                className="text-primary hover:underline"
+                onClick={(e) => {
+                  createRipple(e);
+                  handleSelectService(null);
+                }}
+                className={`${rippleClasses} text-primary hover:underline cursor-pointer`}
               >
                 Cambiar
               </button>
@@ -264,8 +272,11 @@ export default function Scheduler({ professional, services }: Props) {
                 <h3 className="text-lg font-semibold text-foreground mb-2">Selecciona un día</h3>
                 <div className="flex items-center justify-between mb-3 w-full">
                   <button
-                    onClick={() => changeWeek(-1)}
-                    className="p-1 text-primary rounded hover:bg-muted"
+                    onClick={(e) => {
+                      createRipple(e);
+                      changeWeek(-1);
+                    }}
+                    className={`${rippleClasses} p-1 text-primary rounded hover:bg-muted cursor-pointer`}
                     aria-label="Semana anterior"
                   >
                     ‹
@@ -274,8 +285,11 @@ export default function Scheduler({ professional, services }: Props) {
                     {format(currentWeek, 'MMMM yyyy', { locale: es })}
                   </span>
                   <button
-                    onClick={() => changeWeek(1)}
-                    className="p-1 text-primary rounded hover:bg-muted"
+                    onClick={(e) => {
+                      createRipple(e);
+                      changeWeek(1);
+                    }}
+                    className={`${rippleClasses} p-1 text-primary rounded hover:bg-muted cursor-pointer`}
                     aria-label="Semana siguiente"
                   >
                     ›
@@ -310,12 +324,15 @@ export default function Scheduler({ professional, services }: Props) {
                           <motion.button
                             key={i}
                             disabled={disabled}
-                            onClick={() => handleDaySelect(day)}
-                            className={`h-9 w-full rounded-lg text-sm flex items-center justify-center border transition-colors ${
-                              selected
-                                ? 'bg-primary text-primary-foreground border-primary'
-                                : 'bg-background text-foreground border-muted hover:bg-primary hover:text-primary-foreground'
-                            } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              onClick={(e) => {
+                                createRipple(e);
+                                handleDaySelect(day);
+                              }}
+                            className={`${rippleClasses} h-9 w-full rounded-lg text-sm flex items-center justify-center border transition-colors cursor-pointer ${
+                                selected
+                                  ? 'bg-primary text-primary-foreground border-primary'
+                                  : 'bg-background text-foreground border-muted hover:bg-primary hover:text-primary-foreground'
+                              } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                             animate={
                               shouldReduceMotion
                                 ? { scale: 1 }
@@ -340,7 +357,8 @@ export default function Scheduler({ professional, services }: Props) {
                   {['PRESENCIAL', 'ONLINE'].map((type) => (
                     <label
                       key={type}
-                      className={`flex-1 px-4 py-2 text-center rounded-lg border font-semibold cursor-pointer ${
+                      onClick={createRipple}
+                      className={`${rippleClasses} flex-1 px-4 py-2 text-center rounded-lg border font-semibold cursor-pointer ${
                         sessionType === type
                           ? 'bg-primary text-primary-foreground border-primary'
                           : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
@@ -370,8 +388,11 @@ export default function Scheduler({ professional, services }: Props) {
                     <div className="text-center pt-4">
                       <p className="text-destructive mb-2">{fetchError}</p>
                       <button
-                        onClick={fetchAvailability}
-                        className="text-primary font-semibold hover:underline"
+                        onClick={(e) => {
+                          createRipple(e);
+                          fetchAvailability();
+                        }}
+                        className={`${rippleClasses} text-primary font-semibold hover:underline cursor-pointer`}
                       >
                         Reintentar
                       </button>
@@ -389,8 +410,11 @@ export default function Scheduler({ professional, services }: Props) {
                         return (
                           <motion.button
                             key={index}
-                            onClick={() => handleSlotSelect(slot)}
-                            className={`w-full p-2 rounded-lg text-center font-semibold whitespace-nowrap transition-colors border ${
+                            onClick={(e) => {
+                              createRipple(e);
+                              handleSlotSelect(slot);
+                            }}
+                            className={`${rippleClasses} w-full p-2 rounded-lg text-center font-semibold whitespace-nowrap transition-colors border cursor-pointer ${
                               isSelected
                                 ? 'bg-primary text-primary-foreground border-primary shadow-md'
                                 : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
@@ -401,12 +425,6 @@ export default function Scheduler({ professional, services }: Props) {
                                 : isSelected
                                 ? { scale: [1, 1.05, 1] }
                                 : { scale: 1 }
-                            }
-                            whileHover={
-                              shouldReduceMotion ? undefined : { scale: 1.03, opacity: 0.95 }
-                            }
-                            whileFocus={
-                              shouldReduceMotion ? undefined : { scale: 1.03, opacity: 0.95 }
                             }
                             transition={{ duration: 0.2 }}
                           >
@@ -419,14 +437,17 @@ export default function Scheduler({ professional, services }: Props) {
               </div>
             </div>
 
-            {selectedSlot && (
-              <button
-                onClick={() => setShowForm(true)}
-                className="w-full px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
-              >
-                Continuar
-              </button>
-            )}
+              {selectedSlot && (
+                <button
+                  onClick={(e) => {
+                    createRipple(e);
+                    setShowForm(true);
+                  }}
+                  className={`${rippleClasses} w-full px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer`}
+                >
+                  Continuar
+                </button>
+              )}
           </motion.div>
         )}
       </AnimatePresence>

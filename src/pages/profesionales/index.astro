@@ -75,6 +75,7 @@ const professionals: Professional[] = snapshot.docs.map(doc => {
           </p>
           {professionals.map((professional) => (
             <ProfessionalCard
+              client:load
               key={professional.id}
               id={professional.id}
               displayName={professional.displayName}

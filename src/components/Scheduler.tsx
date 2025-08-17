@@ -384,19 +384,36 @@ export default function Scheduler({ professional, services }: Props) {
                   )}
                   <div className="grid grid-cols-2 gap-2 p-2">
                     {!isLoading && !fetchError &&
-                      availableSlots.map((slot, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleSlotSelect(slot)}
-                          className={`w-full p-2 rounded-lg text-center font-semibold whitespace-nowrap transition-colors border ${
-                            selectedSlot?.getTime() === slot.getTime()
-                              ? 'bg-primary text-primary-foreground border-primary shadow-md'
-                              : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
-                          }`}
-                        >
-                          {format(slot, 'hh:mm a', { locale: enUS }).toUpperCase()}
-                        </button>
-                      ))}
+                      availableSlots.map((slot, index) => {
+                        const isSelected = selectedSlot?.getTime() === slot.getTime();
+                        return (
+                          <motion.button
+                            key={index}
+                            onClick={() => handleSlotSelect(slot)}
+                            className={`w-full p-2 rounded-lg text-center font-semibold whitespace-nowrap transition-colors border ${
+                              isSelected
+                                ? 'bg-primary text-primary-foreground border-primary shadow-md'
+                                : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'
+                            }`}
+                            animate={
+                              shouldReduceMotion
+                                ? { scale: 1 }
+                                : isSelected
+                                ? { scale: [1, 1.05, 1] }
+                                : { scale: 1 }
+                            }
+                            whileHover={
+                              shouldReduceMotion ? undefined : { scale: 1.03, opacity: 0.95 }
+                            }
+                            whileFocus={
+                              shouldReduceMotion ? undefined : { scale: 1.03, opacity: 0.95 }
+                            }
+                            transition={{ duration: 0.2 }}
+                          >
+                            {format(slot, 'hh:mm a', { locale: enUS }).toUpperCase()}
+                          </motion.button>
+                        );
+                      })}
                   </div>
                 </div>
               </div>

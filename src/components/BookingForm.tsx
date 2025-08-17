@@ -39,6 +39,22 @@ export default function BookingForm({ professionalId, selectedService, selectedS
     }
   });
 
+  const emailField = register('clientEmail', {
+    required: 'El correo es obligatorio',
+    pattern: { value: /.+@.+\..+/, message: 'Correo inválido' }
+  });
+
+  const emailTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+
+  const handleEmailChange = (): void => {
+    if (emailTimeoutRef.current) {
+      clearTimeout(emailTimeoutRef.current);
+    }
+    emailTimeoutRef.current = setTimeout(() => {
+      void handleEmailBlur();
+    }, 500);
+  };
+
   const onSubmit = async (data: BookingFormData): Promise<void> => {
     if (!professionalId || !selectedService || !selectedSlot) {
       return;
@@ -104,11 +120,9 @@ export default function BookingForm({ professionalId, selectedService, selectedS
               aria-required="true"
               aria-invalid={errors.clientEmail ? 'true' : 'false'}
               aria-describedby={errors.clientEmail ? 'clientEmail-error' : undefined}
-              {...register('clientEmail', {
-                required: 'El correo es obligatorio',
-                pattern: { value: /.+@.+\..+/, message: 'Correo inválido' }
-              })}
-              onBlur={handleEmailBlur}
+              {...emailField}
+              onChange={(e) => { emailField.onChange(e); handleEmailChange(); }}
+              onBlur={(e) => { emailField.onBlur(e); handleEmailBlur(); }}
             />
           </div>
           {errors.clientEmail && (

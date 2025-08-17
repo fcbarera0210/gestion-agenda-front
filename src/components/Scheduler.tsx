@@ -38,6 +38,7 @@ export default function Scheduler({ professional, services }: Props) {
   const [currentWeek, setCurrentWeek] = useState<Date>(
     startOfWeek(new Date(), { weekStartsOn: 1 })
   );
+  const [weekDirection, setWeekDirection] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
   const [availableSlots, setAvailableSlots] = useState<Date[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,6 +56,11 @@ export default function Scheduler({ professional, services }: Props) {
   const steps = ['Servicio', 'Horario', 'Datos'];
   const currentStep = !selectedService ? 1 : showForm ? 3 : 2;
   const shouldReduceMotion = useReducedMotion();
+  const weekVariants = {
+    enter: (dir: number) => ({ x: dir > 0 ? 50 : -50, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? -50 : 50, opacity: 0 }),
+  };
 
   const fetchAvailability = async () => {
     if (!selectedDay || !selectedService) return;
@@ -112,6 +118,7 @@ export default function Scheduler({ professional, services }: Props) {
 
   const changeWeek = (weeks: number) => {
     const newWeek = addWeeks(currentWeek, weeks);
+    setWeekDirection(weeks);
     setCurrentWeek(newWeek);
     setSelectedDay(undefined);
     setSelectedSlot(null);
@@ -281,28 +288,49 @@ export default function Scheduler({ professional, services }: Props) {
                     </span>
                   ))}
                 </div>
-                <div className="grid grid-cols-7 gap-1 w-full">
-                  {Array.from({ length: 7 }).map((_, i) => {
-                    const day = addDays(currentWeek, i);
-                    const dayName = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][day.getDay()];
-                    const isActive = professional.workSchedule?.[dayName]?.isActive;
-                    const disabled = day < today || !isActive;
-                    const selected = selectedDay && isSameDay(day, selectedDay);
-                    return (
-                      <button
-                        key={i}
-                        disabled={disabled}
-                        onClick={() => handleDaySelect(day)}
-                        className={`h-9 w-full rounded-lg text-sm flex items-center justify-center border transition-colors ${
-                          selected
-                            ? 'bg-primary text-primary-foreground border-primary'
-                            : 'bg-background text-foreground border-muted hover:bg-primary hover:text-primary-foreground'
-                        } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      >
-                        {format(day, 'd')}
-                      </button>
-                    );
-                  })}
+                <div className="relative overflow-hidden">
+                  <AnimatePresence initial={false} custom={weekDirection}>
+                    <motion.div
+                      key={format(currentWeek, 'yyyy-MM-dd')}
+                      custom={weekDirection}
+                      variants={shouldReduceMotion ? undefined : weekVariants}
+                      initial={shouldReduceMotion ? false : 'enter'}
+                      animate={shouldReduceMotion ? {} : 'center'}
+                      exit={shouldReduceMotion ? {} : 'exit'}
+                      transition={{ duration: 0.3 }}
+                      className="grid grid-cols-7 gap-1 w-full"
+                    >
+                      {Array.from({ length: 7 }).map((_, i) => {
+                        const day = addDays(currentWeek, i);
+                        const dayName = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][day.getDay()];
+                        const isActive = professional.workSchedule?.[dayName]?.isActive;
+                        const disabled = day < today || !isActive;
+                        const selected = selectedDay && isSameDay(day, selectedDay);
+                        return (
+                          <motion.button
+                            key={i}
+                            disabled={disabled}
+                            onClick={() => handleDaySelect(day)}
+                            className={`h-9 w-full rounded-lg text-sm flex items-center justify-center border transition-colors ${
+                              selected
+                                ? 'bg-primary text-primary-foreground border-primary'
+                                : 'bg-background text-foreground border-muted hover:bg-primary hover:text-primary-foreground'
+                            } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            animate={
+                              shouldReduceMotion
+                                ? { scale: 1 }
+                                : selected
+                                ? { scale: [1, 1.05, 1] }
+                                : { scale: 1 }
+                            }
+                            transition={{ duration: 0.2 }}
+                          >
+                            {format(day, 'd')}
+                          </motion.button>
+                        );
+                      })}
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               </div>
 

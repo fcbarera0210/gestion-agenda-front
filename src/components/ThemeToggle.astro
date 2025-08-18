@@ -45,7 +45,7 @@ import { rippleClasses } from '../utils/ripple';
 <script type="module">
   import { createRipple } from '../utils/ripple';
 
-  document.addEventListener('DOMContentLoaded', () => {
+  const init = () => {
     const btn = document.getElementById('theme-toggle');
     const sun = document.getElementById('sun-icon');
     const moon = document.getElementById('moon-icon');
@@ -65,5 +65,11 @@ import { rippleClasses } from '../utils/ripple';
         syncIcon();
       });
     }
-  });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 </script>

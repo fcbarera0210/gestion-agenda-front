@@ -80,14 +80,14 @@ export default function BookingForm({ professionalId, selectedService, selectedS
 
   const handleEmailBlur = async (): Promise<void> => {
     const email = getValues('clientEmail').trim().toLowerCase();
-    if (!email) {
+    if (!email || !professionalId) {
       setIsSearching(false);
       return;
     }
     setIsSearching(true);
     try {
       const getClientByEmail = httpsCallable(functions, 'getClientByEmail');
-      const { data } = await getClientByEmail({ email });
+      const { data } = await getClientByEmail({ professionalId, email });
       console.log('Cliente encontrado:', data);
       const client = data as { name?: string; phone?: string } | null;
       if (client && (client.name || client.phone)) {

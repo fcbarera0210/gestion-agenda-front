@@ -191,7 +191,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
           ></textarea>
         </div>
 
-        <div className="flex justify-between pt-6">
+        <div className="flex flex-col md:flex-row gap-4 pt-6">
           <button
             type="button"
             onClick={(e) => { createRipple(e); onBack(); }}

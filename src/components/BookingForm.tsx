@@ -1,9 +1,8 @@
 import React from 'react';
 import { httpsCallable } from 'firebase/functions';
-import { functions, db } from '../firebase/client';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { functions } from '../firebase/client';
 import { useForm } from 'react-hook-form';
-import { FaUser, FaEnvelope, FaPhone } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaPhone, FaSpinner } from 'react-icons/fa';
 import { createRipple, rippleClasses } from '../utils/ripple';
 
 interface Service {
@@ -39,6 +38,23 @@ export default function BookingForm({ professionalId, selectedService, selectedS
     }
   });
 
+  const emailField = register('clientEmail', {
+    required: 'El correo es obligatorio',
+    pattern: { value: /.+@.+\..+/, message: 'Correo inválido' }
+  });
+
+  const emailTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const [isSearching, setIsSearching] = React.useState(false);
+
+  const handleEmailChange = (): void => {
+    if (emailTimeoutRef.current) {
+      clearTimeout(emailTimeoutRef.current);
+    }
+    emailTimeoutRef.current = setTimeout(() => {
+      void handleEmailBlur();
+    }, 500);
+  };
+
   const onSubmit = async (data: BookingFormData): Promise<void> => {
     if (!professionalId || !selectedService || !selectedSlot) {
       return;
@@ -63,19 +79,30 @@ export default function BookingForm({ professionalId, selectedService, selectedS
   };
 
   const handleEmailBlur = async (): Promise<void> => {
-    const email = getValues('clientEmail');
-    if (!email || !professionalId) return;
+    const email = getValues('clientEmail').trim().toLowerCase();
+    if (!email || !professionalId) {
+      setIsSearching(false);
+      return;
+    }
+    setIsSearching(true);
     try {
-      const clientsRef = collection(db, 'professionals', professionalId, 'clients');
-      const q = query(clientsRef, where('email', '==', email));
-      const snapshot = await getDocs(q);
-      if (!snapshot.empty) {
-        const client = snapshot.docs[0].data() as any;
-        setValue('clientName', client.name || '');
-        setValue('clientPhone', client.phone || '');
+      const getClientByEmail = httpsCallable(functions, 'getClientByEmail');
+      const { data } = await getClientByEmail({ professionalId, email });
+      console.log('Cliente encontrado:', data);
+      const client = data as { name?: string; phone?: string } | null;
+      if (client && (client.name || client.phone)) {
+        setValue('clientName', client.name || '', { shouldDirty: true, shouldValidate: true });
+        setValue('clientPhone', client.phone || '', { shouldDirty: true, shouldValidate: true });
+      } else {
+        setValue('clientName', '', { shouldDirty: true, shouldValidate: true });
+        setValue('clientPhone', '', { shouldDirty: true, shouldValidate: true });
       }
     } catch (err) {
       console.error('Error al buscar cliente:', err);
+      setValue('clientName', '', { shouldDirty: true, shouldValidate: true });
+      setValue('clientPhone', '', { shouldDirty: true, shouldValidate: true });
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -101,12 +128,13 @@ export default function BookingForm({ professionalId, selectedService, selectedS
               aria-required="true"
               aria-invalid={errors.clientEmail ? 'true' : 'false'}
               aria-describedby={errors.clientEmail ? 'clientEmail-error' : undefined}
-              {...register('clientEmail', {
-                required: 'El correo es obligatorio',
-                pattern: { value: /.+@.+\..+/, message: 'Correo inválido' }
-              })}
-              onBlur={handleEmailBlur}
+              {...emailField}
+              onChange={(e) => { emailField.onChange(e); handleEmailChange(); }}
+              onBlur={(e) => { emailField.onBlur(e); handleEmailBlur(); }}
             />
+            {isSearching && (
+              <FaSpinner className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted-foreground pointer-events-none" />
+            )}
           </div>
           {errors.clientEmail && (
             <p id="clientEmail-error" className="text-sm text-destructive mt-1">{errors.clientEmail.message as string}</p>
@@ -139,19 +167,21 @@ export default function BookingForm({ professionalId, selectedService, selectedS
 
         <div>
           <label htmlFor="clientPhone" className="text-sm font-medium text-foreground">Teléfono (Opcional)</label>
+          <p className="text-xs text-muted-foreground mt-1">Debe comenzar con 9 y tener 9 dígitos.</p>
           <div className="relative mt-1">
             <FaPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
             <input
               type="tel"
               id="clientPhone"
               autoComplete="tel"
-              placeholder="Ej: 555123456"
+              placeholder="9 87654321"
+              maxLength={9}
               className="w-full pl-10 px-4 py-3 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
               aria-required="false"
               aria-invalid={errors.clientPhone ? 'true' : 'false'}
               aria-describedby={errors.clientPhone ? 'clientPhone-error' : undefined}
               {...register('clientPhone', {
-                pattern: { value: /^[0-9]+$/, message: 'Solo números' }
+                pattern: { value: /^9[0-9]{8}$/, message: 'Debe comenzar con 9 y tener 9 dígitos' }
               })}
             />
           </div>

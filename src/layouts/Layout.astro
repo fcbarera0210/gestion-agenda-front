@@ -45,7 +45,7 @@ const { title, professional } = Astro.props;
         <body class="min-h-screen">
                 <div class="min-h-screen md:flex md:items-center md:justify-center">
                         <div class="w-full h-full bg-card md:max-w-md md:rounded-2xl md:shadow-lg md:overflow-hidden md:m-4">
-                                <header class="bg-primary text-primary-foreground p-6 flex items-center gap-4">
+                                <header class="bg-primary text-primary-foreground px-6 py-4 flex items-center gap-4">
                                         <img
                                                 src={professional?.photoURL || '/doctor-placeholder.png'}
                                                 alt={`Foto de ${professional?.displayName || 'profesional'}`}
@@ -59,7 +59,7 @@ const { title, professional } = Astro.props;
                                                 <ThemeToggle />
                                         </div>
                                 </header>
-                                <div class="px-6 pb-6">
+                                <div class="px-6 pt-4 pb-6">
                                         <slot />
                                 </div>
                         </div>

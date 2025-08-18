@@ -50,11 +50,7 @@ export const POST: APIRoute = async ({ request }) => {
       collection(db, 'appointments'),
       where('professionalId', '==', professionalId),
       where('start', '>=', Timestamp.fromDate(startOfSelectedDay)),
-      where('start', '<=', Timestamp.fromDate(endOfSelectedDay)),
-      // Exclude cancelled appointments if Firestore supports the '!=' operator
-      // Otherwise, we'll filter them out after fetching
-      // @ts-ignore - Some Firestore versions may not support this query
-      where('status', '!=', 'cancelled')
+      where('start', '<=', Timestamp.fromDate(endOfSelectedDay))
     );
 
     const timeBlocksQuery = query(

@@ -443,7 +443,7 @@ export default function Scheduler({ professional, services }: Props) {
                     createRipple(e);
                     setShowForm(true);
                   }}
-                  className={`${rippleClasses} w-full px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer`}
+                  className={`${rippleClasses} w-full mt-6 px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 cursor-pointer`}
                 >
                   Continuar
                 </button>

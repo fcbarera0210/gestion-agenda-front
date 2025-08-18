@@ -7,39 +7,54 @@ import { rippleClasses } from '../utils/ripple';
   aria-label="Cambiar tema"
   class={`${rippleClasses} text-2xl p-2 rounded-lg cursor-pointer`}
 >
-  <svg
-    id="theme-icon"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    class="w-6 h-6 transition-transform duration-300 motion-reduce:transition-none"
-  >
-    <path d="M12 3v1" />
-    <path d="M12 20v1" />
-    <path d="M4.22 4.22l.7.7" />
-    <path d="M18.36 18.36l.7.7" />
-    <path d="M3 12h1" />
-    <path d="M20 12h1" />
-    <path d="M4.22 19.78l.7-.7" />
-    <path d="M18.36 5.64l.7-.7" />
-    <path d="M12 5a7 7 0 0 0 7 7 7 7 0 0 1-7 7 7 7 0 0 1 0-14z" />
-  </svg>
+  <span class="relative block w-6 h-6">
+    <svg
+      id="sun-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="absolute inset-0 w-6 h-6 transition-opacity duration-300 motion-reduce:transition-none"
+    >
+      <circle cx="12" cy="12" r="5" />
+      <path d="M12 1v2" />
+      <path d="M12 21v2" />
+      <path d="M4.22 4.22l1.42 1.42" />
+      <path d="M18.36 18.36l1.42 1.42" />
+      <path d="M1 12h2" />
+      <path d="M21 12h2" />
+      <path d="M4.22 19.78l1.42-1.42" />
+      <path d="M18.36 5.64l1.42-1.42" />
+    </svg>
+    <svg
+      id="moon-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="absolute inset-0 w-6 h-6 opacity-0 transition-opacity duration-300 motion-reduce:transition-none"
+    >
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  </span>
 </button>
 <script type="module">
   import { createRipple } from '../utils/ripple';
 
   document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('theme-toggle');
-    const icon = document.getElementById('theme-icon');
+    const sun = document.getElementById('sun-icon');
+    const moon = document.getElementById('moon-icon');
 
-    const syncIcon = () =>
-      icon?.classList.toggle(
-        'rotate-180',
-        document.documentElement.classList.contains('dark'),
-      );
+    const syncIcon = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      sun?.classList.toggle('opacity-0', isDark);
+      moon?.classList.toggle('opacity-0', !isDark);
+    };
     syncIcon();
 
     if (btn) {

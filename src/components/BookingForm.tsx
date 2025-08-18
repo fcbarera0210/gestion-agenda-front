@@ -1,7 +1,6 @@
 import React from 'react';
 import { httpsCallable } from 'firebase/functions';
-import { functions, db } from '../firebase/client';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { functions } from '../firebase/client';
 import { useForm } from 'react-hook-form';
 import { FaUser, FaEnvelope, FaPhone, FaSpinner } from 'react-icons/fa';
 import { createRipple, rippleClasses } from '../utils/ripple';
@@ -81,18 +80,17 @@ export default function BookingForm({ professionalId, selectedService, selectedS
 
   const handleEmailBlur = async (): Promise<void> => {
     const email = getValues('clientEmail').trim().toLowerCase();
-    if (!email || !professionalId) {
+    if (!email) {
       setIsSearching(false);
       return;
     }
     setIsSearching(true);
     try {
-      const clientsRef = collection(db, 'professionals', professionalId, 'clients');
-      const q = query(clientsRef, where('email', '==', email));
-      const snapshot = await getDocs(q);
-      if (!snapshot.empty) {
-        const client = snapshot.docs[0].data() as any;
-        console.log('Cliente encontrado:', client);
+      const getClientByEmail = httpsCallable(functions, 'getClientByEmail');
+      const { data } = await getClientByEmail({ email });
+      console.log('Cliente encontrado:', data);
+      const client = data as { name?: string; phone?: string } | null;
+      if (client && (client.name || client.phone)) {
         setValue('clientName', client.name || '');
         setValue('clientPhone', client.phone || '');
       } else {
@@ -101,6 +99,8 @@ export default function BookingForm({ professionalId, selectedService, selectedS
       }
     } catch (err) {
       console.error('Error al buscar cliente:', err);
+      setValue('clientName', '');
+      setValue('clientPhone', '');
     } finally {
       setIsSearching(false);
     }

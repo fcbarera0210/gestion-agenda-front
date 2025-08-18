@@ -42,18 +42,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
     required: 'El correo es obligatorio',
     pattern: { value: /.+@.+\..+/, message: 'Correo inválido' }
   });
-
-  const emailTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
   const [isSearching, setIsSearching] = React.useState(false);
-
-  const handleEmailChange = (): void => {
-    if (emailTimeoutRef.current) {
-      clearTimeout(emailTimeoutRef.current);
-    }
-    emailTimeoutRef.current = setTimeout(() => {
-      void handleEmailBlur();
-    }, 500);
-  };
 
   const onSubmit = async (data: BookingFormData): Promise<void> => {
     if (!professionalId || !selectedService || !selectedSlot) {
@@ -117,6 +106,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
           <label htmlFor="clientEmail" className="text-sm font-medium text-foreground">Correo Electrónico</label>
+          <p className="text-xs text-muted-foreground mt-1">Si ya has agendado previamente, al ingresar tu correo se completarán automáticamente tus datos.</p>
           <div className="relative mt-1">
             <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
             <input
@@ -129,7 +119,6 @@ export default function BookingForm({ professionalId, selectedService, selectedS
               aria-invalid={errors.clientEmail ? 'true' : 'false'}
               aria-describedby={errors.clientEmail ? 'clientEmail-error' : undefined}
               {...emailField}
-              onChange={(e) => { emailField.onChange(e); handleEmailChange(); }}
               onBlur={(e) => { emailField.onBlur(e); handleEmailBlur(); }}
             />
             {isSearching && (

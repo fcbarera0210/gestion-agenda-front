@@ -65,8 +65,13 @@ export const POST: APIRoute = async ({ request }) => {
       getDocs(timeBlocksQuery)
     ]);
 
+    // Only keep active appointments in existingEvents
+    const activeAppointments = appointmentsSnapshot.docs
+      .filter(d => d.data().status !== 'cancelled')
+      .map(d => ({ start: d.data().start.toDate(), end: d.data().end.toDate() }));
+
     const existingEvents = [
-      ...appointmentsSnapshot.docs.map(d => ({ start: d.data().start.toDate(), end: d.data().end.toDate() })),
+      ...activeAppointments,
       ...timeBlocksSnapshot.docs.map(d => ({ start: d.data().start.toDate(), end: d.data().end.toDate() })),
       ...(daySchedule.breaks || []).map((b: any) => ({
         start: setMinutes(setHours(startOfSelectedDay, parseInt(b.start.split(':')[0])), parseInt(b.start.split(':')[1])),

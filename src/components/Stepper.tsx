@@ -10,7 +10,7 @@ export default function Stepper({ steps, currentStep }: StepperProps) {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <div className="flex items-center mb-6" aria-label="Progreso">
+    <div className="flex items-center mb-6 gap-2" aria-label="Progreso">
       {steps.map((step, index) => {
         const isComplete = index + 1 < currentStep;
         const isActive = index + 1 <= currentStep;
@@ -18,7 +18,7 @@ export default function Stepper({ steps, currentStep }: StepperProps) {
         return (
           <React.Fragment key={step}>
             <motion.div
-              className="flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium"
+              className="flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium flex-shrink-0"
               animate={
                 shouldReduceMotion
                   ? {}

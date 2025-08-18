@@ -91,16 +91,16 @@ export default function BookingForm({ professionalId, selectedService, selectedS
       console.log('Cliente encontrado:', data);
       const client = data as { name?: string; phone?: string } | null;
       if (client && (client.name || client.phone)) {
-        setValue('clientName', client.name || '');
-        setValue('clientPhone', client.phone || '');
+        setValue('clientName', client.name || '', { shouldDirty: true, shouldValidate: true });
+        setValue('clientPhone', client.phone || '', { shouldDirty: true, shouldValidate: true });
       } else {
-        setValue('clientName', '');
-        setValue('clientPhone', '');
+        setValue('clientName', '', { shouldDirty: true, shouldValidate: true });
+        setValue('clientPhone', '', { shouldDirty: true, shouldValidate: true });
       }
     } catch (err) {
       console.error('Error al buscar cliente:', err);
-      setValue('clientName', '');
-      setValue('clientPhone', '');
+      setValue('clientName', '', { shouldDirty: true, shouldValidate: true });
+      setValue('clientPhone', '', { shouldDirty: true, shouldValidate: true });
     } finally {
       setIsSearching(false);
     }

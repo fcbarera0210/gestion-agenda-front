@@ -167,19 +167,21 @@ export default function BookingForm({ professionalId, selectedService, selectedS
 
         <div>
           <label htmlFor="clientPhone" className="text-sm font-medium text-foreground">Teléfono (Opcional)</label>
+          <p className="text-xs text-muted-foreground mt-1">Debe comenzar con 9 y tener 9 dígitos.</p>
           <div className="relative mt-1">
             <FaPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
             <input
               type="tel"
               id="clientPhone"
               autoComplete="tel"
-              placeholder="Ej: 555123456"
+              placeholder="9 87654321"
+              maxLength={9}
               className="w-full pl-10 px-4 py-3 bg-muted rounded-lg text-foreground focus:bg-background focus:ring-2 focus:ring-primary focus:outline-none transition"
               aria-required="false"
               aria-invalid={errors.clientPhone ? 'true' : 'false'}
               aria-describedby={errors.clientPhone ? 'clientPhone-error' : undefined}
               {...register('clientPhone', {
-                pattern: { value: /^[0-9]+$/, message: 'Solo números' }
+                pattern: { value: /^9[0-9]{8}$/, message: 'Debe comenzar con 9 y tener 9 dígitos' }
               })}
             />
           </div>

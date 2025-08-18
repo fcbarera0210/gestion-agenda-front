@@ -35,9 +35,9 @@ export default function AppointmentSuccess({
 }: Props) {
   const shouldReduceMotion = useReducedMotion();
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full md:flex md:justify-center">
       <motion.div
-        className="max-w-md text-center bg-card p-8 rounded-xl border shadow-sm"
+        className="w-full text-center bg-card p-8 md:max-w-md md:rounded-xl md:border md:shadow-sm"
         initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.95 }}
         animate={shouldReduceMotion ? {} : { opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import { createRipple, rippleClasses } from '../utils/ripple';
+import ProfessionalSearch from '../components/ProfessionalSearch';
 ---
 
 <!doctype html>
@@ -32,6 +33,7 @@ import { createRipple, rippleClasses } from '../utils/ripple';
           <p class="text-sm text-muted-foreground">
             Utiliza esta plataforma para reservar citas con nuestros profesionales de forma rápida y sencilla.
           </p>
+          <ProfessionalSearch client:load />
           <p class="text-sm text-muted-foreground">Haz clic en "Reservar hora" para comenzar.</p>
           <div class="flex items-center justify-center gap-4">
             <ThemeToggle />

@@ -1,0 +1,38 @@
+---
+import '../styles/global.css';
+import ThemeToggle from '../components/ThemeToggle.astro';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Página no encontrada" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Página no encontrada</title>
+    <script is:inline>
+      const theme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle(
+        'dark',
+        theme === 'dark' || (!theme && prefersDark)
+      );
+    </script>
+  </head>
+  <body class="relative min-h-screen">
+    <div class="min-h-screen md:flex md:items-center md:justify-center">
+      <div class="w-full h-full bg-card md:max-w-md md:rounded-2xl md:shadow-lg md:overflow-hidden md:m-4">
+        <div class="p-6 text-center space-y-4">
+          <h1 class="text-4xl font-bold">404</h1>
+          <p class="text-sm text-muted-foreground">La página que buscas no existe.</p>
+          <a href="/" class="inline-block mt-4 px-4 py-2 bg-primary text-primary-foreground rounded">Volver al inicio</a>
+          <div class="mt-4 flex items-center justify-center">
+            <ThemeToggle />
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/view-transitions.js" defer></script>
+  </body>
+</html>

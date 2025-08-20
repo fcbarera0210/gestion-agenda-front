@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.astro';
-import { createRipple, rippleClasses } from '../utils/ripple';
+import ProfessionalSearch from '../components/ProfessionalSearch';
 ---
 
 <!doctype html>
@@ -32,23 +32,12 @@ import { createRipple, rippleClasses } from '../utils/ripple';
           <p class="text-sm text-muted-foreground">
             Utiliza esta plataforma para reservar citas con nuestros profesionales de forma rápida y sencilla.
           </p>
-          <p class="text-sm text-muted-foreground">Haz clic en "Reservar hora" para comenzar.</p>
-          <div class="flex items-center justify-center gap-4">
+          <p class="text-sm text-muted-foreground">
+            Busca un profesional por nombre o correo para continuar con el formulario de reserva.
+          </p>
+          <ProfessionalSearch client:load />
+          <div class="flex items-center justify-center">
             <ThemeToggle />
-            <a
-              href="/profesionales"
-              transition:animate="fade"
-              on:click={(e) => {
-                createRipple(e);
-                e.preventDefault();
-                setTimeout(() => { window.location.href = '/profesionales'; }, 150);
-              }}
-              class={
-                `${rippleClasses} px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors cursor-pointer`
-              }
-            >
-              Reservar hora
-            </a>
           </div>
         </div>
     </div>

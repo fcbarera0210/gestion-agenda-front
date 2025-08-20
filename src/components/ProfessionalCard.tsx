@@ -5,11 +5,12 @@ interface Props {
   id: string;
   displayName: string;
   title: string;
+  email: string;
   photoURL?: string;
 }
 
 // Card displaying a professional and linking to their scheduling page
-export default function ProfessionalCard({ id, displayName, title, photoURL }: Props) {
+export default function ProfessionalCard({ id, displayName, title, email, photoURL }: Props) {
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -29,6 +30,7 @@ export default function ProfessionalCard({ id, displayName, title, photoURL }: P
       />
       <div>
         <h2 className="text-lg font-bold text-foreground">{displayName}</h2>
+        <p className="text-sm text-muted-foreground">{email}</p>
         <p className="text-sm text-muted-foreground">{title}</p>
       </div>
     </motion.a>

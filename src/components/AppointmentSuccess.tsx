@@ -14,6 +14,7 @@ interface Service {
 interface Professional {
   id: string;
   displayName: string;
+  email: string;
   title: string;
   photoURL?: string;
 }

@@ -18,6 +18,7 @@ interface Service {
 interface Professional {
   id: string;
   displayName: string;
+  email: string;
   title: string;
   photoURL?: string;
   workSchedule?: Record<string, { isActive: boolean }>;
@@ -211,7 +212,7 @@ export default function Scheduler({ professional, services }: Props) {
             </div>
             <div className="flex justify-start pt-6">
               <a
-                href="/profesionales"
+                href="/"
                 onClick={createRipple}
                 className={`${rippleClasses} flex items-center justify-center w-full md:w-auto px-8 py-3 font-semibold rounded-lg border text-foreground hover:bg-muted transition-colors`}
               >

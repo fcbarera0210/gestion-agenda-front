@@ -35,10 +35,13 @@ export default function ProfessionalSearch() {
     fetchProfessionals();
   }, []);
 
-  const filtered = professionals.filter(p =>
-    p.displayName.toLowerCase().includes(query.toLowerCase()) ||
-    p.email.toLowerCase().includes(query.toLowerCase())
-  );
+  const results = query
+    ? professionals.filter(
+        (p) =>
+          p.displayName.toLowerCase().includes(query.toLowerCase()) ||
+          p.email.toLowerCase().includes(query.toLowerCase())
+      )
+    : [];
 
   return (
     <div className="space-y-4 text-left">
@@ -50,12 +53,13 @@ export default function ProfessionalSearch() {
         className="w-full p-2 border rounded-lg bg-background text-foreground placeholder:text-muted-foreground"
       />
       <div className="flex flex-col gap-4">
-        {filtered.map((p) => (
+        {results.map((p) => (
           <ProfessionalCard
             key={p.id}
             id={p.id}
             displayName={p.displayName}
             title={p.title}
+            email={p.email}
             photoURL={p.photoURL}
           />
         ))}

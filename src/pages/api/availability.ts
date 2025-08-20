@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 export const prerender = false;
 import { db } from '../../firebase/client';
 import { doc, getDoc, collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import type { BreakPeriod, DaySchedule } from '../../types';
 import {
   setHours,
   setMinutes,
@@ -36,7 +37,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const professional = profDocSnap.data();
     const service = serviceDocSnap.data();
-    const daySchedule = professional.workSchedule?.[dayOfWeek];
+    const daySchedule = professional.workSchedule?.[dayOfWeek] as DaySchedule | undefined;
 
     if (!daySchedule || !daySchedule.isActive) {
       return new Response(JSON.stringify([]), { status: 200 });
@@ -73,7 +74,7 @@ export const POST: APIRoute = async ({ request }) => {
     const existingEvents = [
       ...activeAppointments,
       ...timeBlocksSnapshot.docs.map(d => ({ start: d.data().start.toDate(), end: d.data().end.toDate() })),
-      ...(daySchedule.breaks || []).map((b: any) => ({
+      ...(daySchedule?.breaks || []).map((b: BreakPeriod) => ({
         start: setMinutes(setHours(startOfSelectedDay, parseInt(b.start.split(':')[0])), parseInt(b.start.split(':')[1])),
         end: setMinutes(setHours(startOfSelectedDay, parseInt(b.end.split(':')[0])), parseInt(b.end.split(':')[1]))
       }))

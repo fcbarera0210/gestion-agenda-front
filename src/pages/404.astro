@@ -23,63 +23,73 @@ import ThemeToggle from '../components/ThemeToggle.astro';
   <body class="relative min-h-screen">
     <div class="min-h-screen flex items-center justify-center">
       <div class="w-full h-full bg-card max-w-md rounded-2xl shadow-lg overflow-hidden m-4">
-        <div class="p-8 text-center flex flex-col items-center gap-8">
+        <div class="p-8 text-center flex flex-col items-center gap-12">
           <svg
-            class="mx-auto h-32 w-32 text-muted-foreground"
-            viewBox="0 0 120 120"
+            class="mx-auto h-40 w-40 text-muted-foreground"
+            viewBox="0 0 200 200"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
+            <!-- Calendar frame -->
             <rect
-              x="10"
-              y="30"
-              width="100"
-              height="80"
-              rx="8"
+              x="20"
+              y="40"
+              width="160"
+              height="140"
+              rx="10"
               stroke="currentColor"
-              stroke-width="4"
+              stroke-width="8"
             />
+            <!-- Calendar top bar -->
             <rect
-              x="10"
+              x="20"
               y="20"
-              width="100"
-              height="20"
-              rx="4"
-              fill="#FF9B80"
-              stroke="currentColor"
-              stroke-width="4"
+              width="160"
+              height="40"
+              rx="8"
+              fill="currentColor"
+              fill-opacity="0.2"
             />
-            <path
-              d="M30 20v-8m60 8v-8"
-              stroke="currentColor"
-              stroke-width="4"
-              stroke-linecap="round"
-            />
-            <circle cx="50" cy="70" r="3" fill="currentColor" />
-            <circle cx="70" cy="70" r="3" fill="currentColor" />
+            <!-- Rings -->
             <line
-              x1="58"
-              y1="80"
-              x2="62"
-              y2="80"
+              x1="60"
+              y1="20"
+              x2="60"
+              y2="4"
               stroke="currentColor"
-              stroke-width="2"
+              stroke-width="8"
               stroke-linecap="round"
             />
-            <path
-              d="M90 60c20 0 20 20 0 20"
+            <line
+              x1="140"
+              y1="20"
+              x2="140"
+              y2="4"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-dasharray="4 4"
-              fill="none"
+              stroke-width="8"
+              stroke-linecap="round"
             />
-            <circle cx="108" cy="60" r="4" fill="currentColor" />
+            <!-- Torn bottom -->
+            <path
+              d="M20 180l20-10 20 10 20-10 20 10 20-10 20 10 20-10v20H20z"
+              fill="currentColor"
+              fill-opacity="0.2"
+            />
+            <!-- 404 text -->
+            <text
+              x="100"
+              y="130"
+              text-anchor="middle"
+              font-size="80"
+              font-weight="700"
+              fill="currentColor"
+            >404</text>
           </svg>
-          <h1 class="text-8xl font-bold">404</h1>
-          <p class="text-base text-muted-foreground">La página que buscas no existe.</p>
+          <h1 class="text-9xl font-bold tracking-wide mb-6">404</h1>
+          <p class="text-xl text-muted-foreground leading-relaxed tracking-wide">La página que buscas no existe.</p>
           <a
             href="/"
-            class="px-6 py-3 bg-primary text-primary-foreground rounded"
+            class="mt-8 px-6 py-3 bg-primary text-primary-foreground rounded"
             >Volver al inicio</a
           >
           <ThemeToggle />

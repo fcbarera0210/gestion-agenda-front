@@ -16,21 +16,32 @@ interface Professional {
 export default function ProfessionalSearch() {
   const [query, setQuery] = useState('');
   const [professionals, setProfessionals] = useState<Professional[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProfessionals = async () => {
-      const snapshot = await getDocs(collection(db, 'professionals'));
-      const items: Professional[] = snapshot.docs.map(doc => {
-        const data = doc.data() as DocumentData;
-        return {
-          id: doc.id,
-          displayName: data.displayName,
-          title: data.title,
-          email: data.email,
-          photoURL: data.photoURL,
-        };
-      });
-      setProfessionals(items);
+      setIsLoading(true);
+      setError(null);
+      try {
+        const snapshot = await getDocs(collection(db, 'professionals'));
+        const items: Professional[] = snapshot.docs.map((doc) => {
+          const data = doc.data() as DocumentData;
+          return {
+            id: doc.id,
+            displayName: data.displayName,
+            title: data.title,
+            email: data.email,
+            photoURL: data.photoURL,
+          };
+        });
+        setProfessionals(items);
+      } catch (err) {
+        console.error(err);
+        setError('no se pudieron obtener profesionales');
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchProfessionals();
   }, []);
@@ -53,16 +64,19 @@ export default function ProfessionalSearch() {
         className="w-full p-2 border rounded-lg bg-background text-foreground placeholder:text-muted-foreground"
       />
       <div className="flex flex-col gap-4">
-        {results.map((p) => (
-          <ProfessionalCard
-            key={p.id}
-            id={p.id}
-            displayName={p.displayName}
-            title={p.title}
-            email={p.email}
-            photoURL={p.photoURL}
-          />
-        ))}
+        {isLoading && <p>cargando...</p>}
+        {error && <p>{error}</p>}
+        {!isLoading && !error &&
+          results.map((p) => (
+            <ProfessionalCard
+              key={p.id}
+              id={p.id}
+              displayName={p.displayName}
+              title={p.title}
+              email={p.email}
+              photoURL={p.photoURL}
+            />
+          ))}
       </div>
     </div>
   );

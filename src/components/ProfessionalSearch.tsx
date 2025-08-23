@@ -55,7 +55,7 @@ export default function ProfessionalSearch() {
     : [];
 
   return (
-    <div className="space-y-4 text-left">
+    <div className="space-y-6 text-left">
       <input
         type="text"
         placeholder="Buscar profesional por nombre o email"
@@ -64,8 +64,13 @@ export default function ProfessionalSearch() {
         className="w-full p-2 border rounded-lg bg-background text-foreground placeholder:text-muted-foreground"
       />
       <div className="flex flex-col gap-4">
-        {isLoading && <p>cargando...</p>}
-        {error && <p>{error}</p>}
+        {isLoading && (
+          <div className="flex flex-col items-center gap-2 py-8">
+            <div className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <p className="text-center">cargando...</p>
+          </div>
+        )}
+        {error && <p className="py-8 text-center">{error}</p>}
         {!isLoading && !error &&
           results.map((p) => (
             <ProfessionalCard

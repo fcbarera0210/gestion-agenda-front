@@ -9,7 +9,7 @@ import ProfessionalSearch from '../components/ProfessionalSearch';
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Sistema de Agendamiento" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Inicio</title>
     <script is:inline>
@@ -35,8 +35,10 @@ import ProfessionalSearch from '../components/ProfessionalSearch';
           <p class="text-sm text-muted-foreground">
             Busca un profesional por nombre o correo para continuar con el formulario de reserva.
           </p>
-          <ProfessionalSearch client:load />
-          <div class="flex items-center justify-center">
+          <div class="flex items-center gap-2">
+            <div class="flex-grow">
+              <ProfessionalSearch client:load />
+            </div>
             <ThemeToggle />
           </div>
         </div>

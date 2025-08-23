@@ -45,23 +45,29 @@ const { title, professional } = Astro.props;
         <body class="min-h-screen">
                 <div class="min-h-screen md:flex md:items-center md:justify-center">
                         <div class="w-full h-full bg-card md:max-w-md md:rounded-2xl md:shadow-lg md:overflow-hidden md:m-4">
-                                <header class="bg-primary text-primary-foreground px-6 py-4 flex items-center gap-4">
-                                        <img
-                                                src={professional?.photoURL || '/doctor-placeholder.png'}
-                                                alt={`Foto de ${professional?.displayName || 'profesional'}`}
-                                                class="w-16 h-16 rounded-full object-cover border-4 border-primary-foreground"
-                                        />
-                                        <div>
-                                                <h1 class="text-xl font-bold">{professional?.displayName}</h1>
-                                                <p class="text-sm">{professional?.title}</p>
+                                {professional && (
+                                        <header class="bg-primary text-primary-foreground px-6 py-4 flex items-center gap-4">
+                                                <img
+                                                        src={professional.photoURL || '/doctor-placeholder.png'}
+                                                        alt={`Foto de ${professional.displayName}`}
+                                                        class="w-16 h-16 rounded-full object-cover border-4 border-primary-foreground"
+                                                />
+                                                <div>
+                                                        <h1 class="text-xl font-bold">{professional.displayName}</h1>
+                                                        <p class="text-sm">{professional.title}</p>
+                                                </div>
+                                                <div class="ml-auto flex items-center gap-4">
+                                                        <ThemeToggle />
+                                                </div>
+                                        </header>
+                                )}
+                                {professional ? (
+                                        <div class="px-6 pt-4 pb-6">
+                                                <slot />
                                         </div>
-                                        <div class="ml-auto flex items-center gap-4">
-                                                <ThemeToggle />
-                                        </div>
-                                </header>
-                                <div class="px-6 pt-4 pb-6">
+                                ) : (
                                         <slot />
-                                </div>
+                                )}
                         </div>
                 </div>
                 <script src="/js/view-transitions.js" defer></script>

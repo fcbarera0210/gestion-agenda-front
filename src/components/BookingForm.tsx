@@ -22,12 +22,13 @@ interface Props {
   professionalId: string | undefined;
   selectedService: Service;
   selectedSlot: Date;
+  sessionType: 'PRESENCIAL' | 'ONLINE';
   onBookingSuccess: () => void;
   onBack: () => void;
 }
 
 // Form that submits client information to create a booking
-export default function BookingForm({ professionalId, selectedService, selectedSlot, onBookingSuccess, onBack }: Props) {
+export default function BookingForm({ professionalId, selectedService, selectedSlot, sessionType, onBookingSuccess, onBack }: Props) {
   const { register, handleSubmit, formState: { errors, isValid, isSubmitting }, setValue, getValues } = useForm<BookingFormData>({
     mode: 'onChange',
     defaultValues: {
@@ -59,7 +60,8 @@ export default function BookingForm({ professionalId, selectedService, selectedS
         clientPhone: data.clientPhone,
         serviceName: selectedService.name,
         serviceDuration: selectedService.duration,
-        notes: data.notes
+        notes: data.notes,
+        type: sessionType.toLowerCase(),
       });
       onBookingSuccess();
     } catch (err) {

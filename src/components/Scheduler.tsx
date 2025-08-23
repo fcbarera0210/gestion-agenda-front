@@ -232,6 +232,7 @@ export default function Scheduler({ professional, services }: Props) {
               professionalId={professional.id}
               selectedService={selectedService}
               selectedSlot={selectedSlot}
+              sessionType={sessionType}
               onBookingSuccess={handleBookingSuccess}
               onBack={() => setShowForm(false)}
             />

@@ -23,7 +23,7 @@ interface Props {
   professional: Professional;
   service: Service;
   slot: Date;
-  sessionType: string;
+  sessionType: 'presencial' | 'online';
   onRestart: () => void;
 }
 
@@ -59,7 +59,7 @@ export default function AppointmentSuccess({
 
         <div className="text-left space-y-1 text-foreground">
           <p>
-            <span className="font-semibold">Ubicación:</span> {sessionType}
+            <span className="font-semibold">Ubicación:</span> {sessionType.charAt(0).toUpperCase() + sessionType.slice(1)}
           </p>
           <p>
             <span className="font-semibold">Duración:</span> {service.duration} min

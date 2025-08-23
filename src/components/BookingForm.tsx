@@ -22,7 +22,7 @@ interface Props {
   professionalId: string | undefined;
   selectedService: Service;
   selectedSlot: Date;
-  sessionType: 'PRESENCIAL' | 'ONLINE';
+  sessionType: 'presencial' | 'online';
   onBookingSuccess: () => void;
   onBack: () => void;
 }
@@ -61,7 +61,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
         serviceName: selectedService.name,
         serviceDuration: selectedService.duration,
         notes: data.notes,
-        type: sessionType.toLowerCase(),
+        type: sessionType,
       });
       onBookingSuccess();
     } catch (err) {

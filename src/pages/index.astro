@@ -22,6 +22,9 @@ import ProfessionalSearch from '../components/ProfessionalSearch';
     </script>
   </head>
   <body class="relative min-h-screen">
+    <div class="absolute top-4 right-4">
+      <ThemeToggle />
+    </div>
     <div class="min-h-screen md:flex md:items-center md:justify-center">
       <div class="w-full h-full bg-card md:max-w-md md:rounded-2xl md:shadow-lg md:overflow-hidden md:m-4">
         <div class="relative bg-[#6c3edc] p-6">
@@ -39,7 +42,6 @@ import ProfessionalSearch from '../components/ProfessionalSearch';
             <div class="flex-grow">
               <ProfessionalSearch client:load />
             </div>
-            <ThemeToggle />
           </div>
         </div>
     </div>

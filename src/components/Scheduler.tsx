@@ -203,7 +203,7 @@ export default function Scheduler({ professional, services }: Props) {
                       createRipple(e);
                       handleSelectService(service);
                     }}
-                    className={`${rippleClasses} bg-primary text-primary-foreground font-semibold px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors cursor-pointer`}
+                    className={`${rippleClasses} bg-primary text-primary-foreground px-5 py-2 rounded-lg hover:bg-primary/90 transition-colors cursor-pointer`}
                   >
                     Elegir
                   </button>
@@ -393,7 +393,7 @@ export default function Scheduler({ professional, services }: Props) {
                           createRipple(e);
                           fetchAvailability();
                         }}
-                        className={`${rippleClasses} text-primary font-semibold hover:underline cursor-pointer`}
+                        className={`${rippleClasses} text-primary hover:underline cursor-pointer`}
                       >
                         Reintentar
                       </button>
@@ -415,7 +415,7 @@ export default function Scheduler({ professional, services }: Props) {
                               createRipple(e);
                               handleSlotSelect(slot);
                             }}
-                            className={`${rippleClasses} w-full p-2 rounded-lg text-center font-semibold whitespace-nowrap transition-colors border cursor-pointer ${
+                            className={`${rippleClasses} w-full p-2 rounded-lg text-center whitespace-nowrap transition-colors border cursor-pointer ${
                               isSelected
                                 ? 'bg-primary text-primary-foreground border-primary shadow-md'
                                 : 'bg-background text-primary border-primary hover:bg-primary hover:text-primary-foreground'

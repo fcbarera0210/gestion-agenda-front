@@ -1,51 +1,32 @@
 ---
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import ProfessionalSearch from '../components/ProfessionalSearch';
 ---
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="description" content="Sistema de Agendamiento" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Inicio</title>
-    <script is:inline>
-      const theme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.classList.toggle(
-        'dark',
-        theme === 'dark' || (!theme && prefersDark)
-      );
-    </script>
-  </head>
-  <body class="relative min-h-screen">
-    <div class="absolute top-4 right-4">
-      <ThemeToggle />
-    </div>
-    <div class="min-h-screen md:flex md:items-center md:justify-center">
-      <div class="w-full h-full bg-card md:max-w-md md:rounded-2xl md:shadow-lg md:overflow-hidden md:m-4">
-        <div class="relative bg-[#6c3edc] p-6">
-          <img src="/recurso17.png" alt="Seleccionar fecha" class="w-full" />
-        </div>
-        <div class="p-6 text-center space-y-4">
-          <h1 class="text-xl font-bold">¡Bienvenido a Gestión de Agenda!</h1>
-          <p class="text-sm text-muted-foreground">
-            Utiliza esta plataforma para reservar citas con nuestros profesionales de forma rápida y sencilla.
-          </p>
-          <p class="text-sm text-muted-foreground">
-            Busca un profesional por nombre o correo para continuar con el formulario de reserva.
-          </p>
-          <div class="flex items-center gap-2">
-            <div class="flex-grow">
-              <ProfessionalSearch client:load />
-            </div>
+<Layout title="Inicio">
+  <div class="absolute top-4 right-4">
+    <ThemeToggle />
+  </div>
+  <div class="min-h-screen md:flex md:items-center md:justify-center">
+    <div class="w-full h-full bg-card md:max-w-md md:rounded-2xl md:shadow-lg md:overflow-hidden md:m-4">
+      <div class="relative bg-[#6c3edc] p-6">
+        <img src="/recurso17.png" alt="Seleccionar fecha" class="w-full" />
+      </div>
+      <div class="p-6 text-center space-y-4">
+        <h1 class="text-xl font-bold">¡Bienvenido a Gestión de Agenda!</h1>
+        <p class="text-sm text-muted-foreground">
+          Utiliza esta plataforma para reservar citas con nuestros profesionales de forma rápida y sencilla.
+        </p>
+        <p class="text-sm text-muted-foreground">
+          Busca un profesional por nombre o correo para continuar con el formulario de reserva.
+        </p>
+        <div class="flex items-center gap-2">
+          <div class="flex-grow">
+            <ProfessionalSearch client:load />
           </div>
         </div>
+      </div>
     </div>
   </div>
-  <script src="/js/view-transitions.js" defer></script>
-  </body>
-</html>
+</Layout>

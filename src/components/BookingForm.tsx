@@ -50,8 +50,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
       return;
     }
     try {
-      const createBooking = httpsCallable(functions, 'createBooking');
-      await createBooking({
+      const payload = {
         professionalId: professionalId,
         serviceId: selectedService.id,
         selectedSlot: selectedSlot.toISOString(),
@@ -60,12 +59,18 @@ export default function BookingForm({ professionalId, selectedService, selectedS
         clientPhone: data.clientPhone,
         serviceName: selectedService.name,
         serviceDuration: selectedService.duration,
-        notes: data.notes,
-        type: sessionType,
-      });
+        type: sessionType.toLowerCase(),
+      };
+      const createBooking = httpsCallable(functions, 'createBooking');
+      const result = await createBooking(payload);
+      console.log(result.data);
       onBookingSuccess();
-    } catch (err) {
-      console.error('Error al llamar a la función de reserva:', err);
+    } catch (err: any) {
+      if (err?.code === 'functions/invalid-argument' || err?.code === 'invalid-argument') {
+        console.error('Faltan campos obligatorios en la solicitud:', err);
+      } else {
+        console.error('Error al llamar a la función de reserva:', err);
+      }
     }
   };
 

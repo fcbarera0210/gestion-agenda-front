@@ -57,36 +57,41 @@ export default function ProfessionalSearch() {
 
   return (
     <div className="space-y-6 text-left">
-      <div className="relative">
-        <FiSearch className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
-        <input
-          type="text"
-          placeholder="Buscar profesional por nombre o email"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="w-full p-2 pl-8 border rounded-lg bg-background text-foreground placeholder:text-muted-foreground"
-        />
-      </div>
-      <div className="flex flex-col gap-4">
-        {isLoading && (
-          <div className="flex flex-col items-center gap-2 py-8">
-            <FiLoader className="h-6 w-6 animate-spin text-primary" />
-            <p className="text-center">cargando...</p>
-          </div>
-        )}
-        {error && <p className="py-8 text-center">{error}</p>}
-        {!isLoading && !error &&
-          results.map((p) => (
-            <ProfessionalCard
-              key={p.id}
-              id={p.id}
-              displayName={p.displayName}
-              title={p.title}
-              email={p.email}
-              photoURL={p.photoURL}
+      {isLoading ? (
+        <div className="flex flex-col items-center gap-2 py-8">
+          <FiLoader className="h-6 w-6 animate-spin text-primary" />
+          <p className="text-center">Buscando datos de profesionales…</p>
+        </div>
+      ) : (
+        <>
+          <div className="relative">
+            <FiSearch className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Buscar profesional por nombre o email"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-full p-2 pl-8 border rounded-lg bg-background text-foreground placeholder:text-muted-foreground"
             />
-          ))}
-      </div>
+          </div>
+          <div className="flex flex-col gap-4">
+            {error ? (
+              <p className="py-8 text-center">{error}</p>
+            ) : (
+              results.map((p) => (
+                <ProfessionalCard
+                  key={p.id}
+                  id={p.id}
+                  displayName={p.displayName}
+                  title={p.title}
+                  email={p.email}
+                  photoURL={p.photoURL}
+                />
+              ))
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

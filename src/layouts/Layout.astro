@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import RandomGradientAvatar from '../components/common/Avatar/RandomGradientAvatar.tsx';
 
 interface Professional {
 displayName: string;
@@ -47,11 +48,19 @@ const { title, professional } = Astro.props;
                         <div class="w-full h-full bg-card md:max-w-md md:rounded-2xl md:shadow-lg md:overflow-hidden md:m-4">
                                 {professional && (
                                         <header class="bg-primary text-primary-foreground px-6 py-4 flex items-center gap-4">
-                                                <img
-                                                        src={professional.photoURL || '/doctor-placeholder.png'}
-                                                        alt={`Foto de ${professional.displayName}`}
-                                                        class="w-16 h-16 rounded-full object-cover border-4 border-primary-foreground"
-                                                />
+                                                {professional.photoURL ? (
+                                                        <img
+                                                                src={professional.photoURL}
+                                                                alt={`Foto de ${professional.displayName}`}
+                                                                class="w-16 h-16 rounded-full object-cover border-4 border-primary-foreground"
+                                                        />
+                                                ) : (
+                                                        <RandomGradientAvatar
+                                                                alt={`Foto de ${professional.displayName}`}
+                                                                className="border-4 border-primary-foreground"
+                                                                client:load
+                                                        />
+                                                )}
                                                 <div>
                                                         <h1 class="text-xl font-bold">{professional.displayName}</h1>
                                                         <p class="text-sm">{professional.title}</p>

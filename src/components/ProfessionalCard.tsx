@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { createRipple, rippleClasses } from "../utils/ripple";
+import RandomGradientAvatar from "./common/Avatar/RandomGradientAvatar";
 
 interface Props {
   id: string;
@@ -23,11 +24,15 @@ export default function ProfessionalCard({ id, displayName, title, email, photoU
       onClick={createRipple}
       className={`${rippleClasses} flex items-center gap-4 p-4 bg-card rounded-xl border shadow-sm motion-safe:transition-shadow motion-safe:hover:shadow-md motion-safe:focus:shadow-md`}
     >
-      <img
-        src={photoURL || '/doctor-placeholder.png'}
-        alt={`Foto de ${displayName}`}
-        className="w-16 h-16 rounded-full object-cover"
-      />
+      {photoURL ? (
+        <img
+          src={photoURL}
+          alt={`Foto de ${displayName}`}
+          className="w-16 h-16 rounded-full object-cover"
+        />
+      ) : (
+        <RandomGradientAvatar alt={`Foto de ${displayName}`} />
+      )}
       <div>
         <h2 className="text-lg font-bold text-foreground">{displayName}</h2>
         <p className="text-sm text-muted-foreground">{email}</p>

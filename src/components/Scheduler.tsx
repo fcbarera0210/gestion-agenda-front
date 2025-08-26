@@ -45,12 +45,12 @@ export default function Scheduler({ professional, services }: Props) {
   const [availableSlots, setAvailableSlots] = useState<Date[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [sessionType, setSessionType] = useState<'PRESENCIAL' | 'ONLINE'>('PRESENCIAL');
+  const [sessionType, setSessionType] = useState<'presencial' | 'online'>('presencial');
   const [showForm, setShowForm] = useState(false);
   const [bookingDetails, setBookingDetails] = useState<{
     service: Service;
     slot: Date;
-    sessionType: string;
+    sessionType: 'presencial' | 'online';
   } | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const today = startOfDay(new Date());
@@ -148,7 +148,7 @@ export default function Scheduler({ professional, services }: Props) {
     setAvailableSlots([]);
     setIsLoading(false);
     setBookingSuccess(false);
-    setSessionType('PRESENCIAL');
+    setSessionType('presencial');
     setShowForm(false);
     setBookingDetails(null);
   };
@@ -232,6 +232,7 @@ export default function Scheduler({ professional, services }: Props) {
               professionalId={professional.id}
               selectedService={selectedService}
               selectedSlot={selectedSlot}
+              sessionType={sessionType}
               onBookingSuccess={handleBookingSuccess}
               onBack={() => setShowForm(false)}
             />
@@ -355,7 +356,7 @@ export default function Scheduler({ professional, services }: Props) {
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">Tipo de sesión</h3>
                 <div className="flex gap-2 w-full" role="radiogroup" aria-label="Tipo de sesión">
-                  {['PRESENCIAL', 'ONLINE'].map((type) => (
+                  {['presencial', 'online'].map((type) => (
                     <label
                       key={type}
                       onClick={createRipple}
@@ -371,9 +372,9 @@ export default function Scheduler({ professional, services }: Props) {
                         value={type}
                         className="sr-only"
                         checked={sessionType === type}
-                        onChange={() => setSessionType(type as 'PRESENCIAL' | 'ONLINE')}
+                        onChange={() => setSessionType(type as 'presencial' | 'online')}
                       />
-                      {type}
+                      {type.charAt(0).toUpperCase() + type.slice(1)}
                     </label>
                   ))}
                 </div>

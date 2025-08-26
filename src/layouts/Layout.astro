@@ -52,12 +52,11 @@ const { title, professional } = Astro.props;
                                                         <img
                                                                 src={professional.photoURL}
                                                                 alt={`Foto de ${professional.displayName}`}
-                                                                class="w-16 h-16 rounded-full object-cover border-4 border-primary-foreground"
+                                                                class="w-16 h-16 rounded-full object-cover"
                                                         />
                                                 ) : (
                                                         <RandomGradientAvatar
                                                                 alt={`Foto de ${professional.displayName}`}
-                                                                className="border-4 border-primary-foreground"
                                                                 client:load
                                                         />
                                                 )}

@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "gestion-agenda-cliente",
     "public": "dist",
     "ignore": [
       "firebase.json",

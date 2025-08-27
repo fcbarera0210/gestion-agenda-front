@@ -64,6 +64,8 @@ export default function Scheduler({ professional, services }: Props) {
     exit: (dir: number) => ({ x: dir > 0 ? -50 : 50, opacity: 0 }),
   };
 
+  const FUNCTIONS_BASE = `https://us-central1-${import.meta.env.PUBLIC_FIREBASE_PROJECT_ID}.cloudfunctions.net`;
+
   const fetchAvailability = async () => {
     if (!selectedDay || !selectedService) return;
     setFetchError(null);
@@ -71,7 +73,7 @@ export default function Scheduler({ professional, services }: Props) {
     setAvailableSlots([]);
     setSelectedSlot(null);
     try {
-      const response = await fetch('/api/availability', {
+      const response = await fetch(`${FUNCTIONS_BASE}/availability`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

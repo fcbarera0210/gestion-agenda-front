@@ -1,13 +1,17 @@
 import NeutralAvatar from './NeutralAvatar.svg?react';
 import randomGradient from '../../../utils/randomGradient';
-import { useMemo, type HTMLAttributes } from 'react';
+import { useEffect, useState, type HTMLAttributes } from 'react';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   alt?: string;
 }
 
 export default function RandomGradientAvatar({ className = '', alt, ...props }: Props) {
-  const gradient = useMemo(() => randomGradient(), []);
+  const [gradient, setGradient] = useState('');
+
+  useEffect(() => {
+    setGradient(randomGradient());
+  }, []);
 
   return (
     <div

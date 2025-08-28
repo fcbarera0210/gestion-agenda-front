@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { format, startOfWeek, addDays, addWeeks, isSameDay, startOfDay } from 'date-fns';
+import {
+  format,
+  startOfWeek,
+  addDays,
+  addWeeks,
+  isSameDay,
+  startOfDay,
+  parseISO,
+  isValid,
+} from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
 import BookingForm from './BookingForm';
 import AppointmentSuccess from './AppointmentSuccess';
@@ -88,7 +97,12 @@ export default function Scheduler({ professional, services }: Props) {
       );
       if (!response.ok) throw new Error('Error al buscar disponibilidad');
       const { result } = await response.json();
-      setAvailableSlots(result.map((slot: string) => new Date(slot)));
+      console.log('availability result:', result);
+      setAvailableSlots(
+        result
+          .map((slot: string) => parseISO(slot))
+          .filter((date) => isValid(date))
+      );
     } catch (error) {
       console.error(error);
       setFetchError('No se pudo obtener la disponibilidad. Intenta nuevamente.');

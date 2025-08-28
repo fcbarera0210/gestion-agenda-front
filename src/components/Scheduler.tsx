@@ -10,6 +10,8 @@ import {
   isValid,
 } from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
+import { httpsCallable } from 'firebase/functions';
+import { functions } from '../firebase/client';
 import BookingForm from './BookingForm';
 import AppointmentSuccess from './AppointmentSuccess';
 import Stepper from './Stepper';
@@ -79,29 +81,21 @@ export default function Scheduler({ professional, services }: Props) {
     setIsLoading(true);
     setAvailableSlots([]);
     setSelectedSlot(null);
-    const projectId = import.meta.env.PUBLIC_FIREBASE_PROJECT_ID;
     try {
-      const response = await fetch(
-        `https://us-central1-${projectId}.cloudfunctions.net/availability`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            data: {
-              date: selectedDay.toISOString().slice(0, 10),
-              professionalId: professional.id,
-              serviceId: selectedService.id,
-            },
-          }),
-        }
-      );
-      if (!response.ok) throw new Error('Error al buscar disponibilidad');
-      const { result } = await response.json();
-      console.log('availability result:', result);
+      const callable = httpsCallable(functions, 'availability');
+      const { data: slots } = await callable({
+        date: selectedDay.toISOString().slice(0, 10),
+        professionalId: professional.id,
+        serviceId: selectedService.id,
+      });
+      console.log('slots:', slots);
+      console.log('slots JSON:', JSON.stringify(slots));
       setAvailableSlots(
-        result
-          .map((slot: string) => parseISO(slot))
-          .filter((date) => isValid(date))
+        Array.isArray(slots)
+          ? slots
+              .map((slot: string) => parseISO(slot))
+              .filter((date) => isValid(date))
+          : []
       );
     } catch (error) {
       console.error(error);

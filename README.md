@@ -11,6 +11,9 @@ y componentes de [React](https://react.dev/), utiliza [Tailwind CSS](https://tai
 los estilos y se integra con [Firebase](https://firebase.google.com/) (Firestore y Functions)
 como backend para persistencia y lógica de negocio.
 
+La disponibilidad de turnos se obtiene mediante una Cloud Function de Firebase,
+por lo que no es necesario ejecutar un endpoint local.
+
 ## Requisitos
 
 - Node.js 18+

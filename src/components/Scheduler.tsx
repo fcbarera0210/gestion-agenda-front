@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { format, startOfWeek, addDays, addWeeks, isSameDay, startOfDay } from 'date-fns';
+import {
+  format,
+  startOfWeek,
+  addDays,
+  addWeeks,
+  addMinutes,
+  isSameDay,
+  startOfDay,
+  parseISO,
+  isValid,
+} from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
+import { httpsCallable } from 'firebase/functions';
+import { functions } from '../firebase/client';
 import BookingForm from './BookingForm';
 import AppointmentSuccess from './AppointmentSuccess';
 import Stepper from './Stepper';
@@ -71,18 +83,24 @@ export default function Scheduler({ professional, services }: Props) {
     setAvailableSlots([]);
     setSelectedSlot(null);
     try {
-      const response = await fetch('/api/availability', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          date: selectedDay.toISOString(),
-          professionalId: professional.id,
-          serviceId: selectedService.id,
-        }),
+      const callable = httpsCallable(functions, 'availability');
+      const { data: slots } = await callable({
+        date: selectedDay.toISOString().slice(0, 10),
+        professionalId: professional.id,
+        serviceId: selectedService.id,
       });
-      if (!response.ok) throw new Error('Error al buscar disponibilidad');
-      const slots: string[] = await response.json();
-      setAvailableSlots(slots.map((slot) => new Date(slot)));
+      console.log('slots:', slots);
+      console.log('slots JSON:', JSON.stringify(slots));
+      setAvailableSlots(
+        Array.isArray(slots)
+          ? slots
+              .map((slot: string) => {
+                const d = parseISO(slot);
+                return addMinutes(d, d.getTimezoneOffset());
+              })
+              .filter(isValid)
+          : []
+      );
     } catch (error) {
       console.error(error);
       setFetchError('No se pudo obtener la disponibilidad. Intenta nuevamente.');

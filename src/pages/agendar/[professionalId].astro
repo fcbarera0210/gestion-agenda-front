@@ -1,61 +1,14 @@
 ---
-export const prerender = false;
 import Layout from '../../layouts/Layout.astro';
-import { db } from '../../firebase/client';
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import Scheduler from '../../components/Scheduler';
-import type { ProfessionalData, Service, Professional } from '../../types';
+import AgendarPage from '../../components/AgendarPage';
 
 const { professionalId } = Astro.params;
 
-// Page that displays the booking scheduler for a specific professional
-
-// Fetch professional information and associated services
-async function getProfessionalData(id?: string): Promise<ProfessionalData> {
-  if (!id) return { professional: null, services: [] };
-
-  const profDocRef = doc(db, 'professionals', id);
-  const profDocSnap = await getDoc(profDocRef);
-  const professional = profDocSnap.exists()
-    ? (profDocSnap.data() as Professional)
-    : null;
-
-  const servicesQuery = query(collection(db, 'services'), where('professionalId', '==', id));
-  const servicesSnapshot = await getDocs(servicesQuery);
-  const services = servicesSnapshot.docs.map(doc => {
-    const data = doc.data() as Service;
-    return {
-      id: doc.id,
-      name: data.name,
-      duration: data.duration,
-      price: data.price
-    };
-  });
-
-  return { professional, services };
-}
-
-const { professional, services } = await getProfessionalData(professionalId);
-
-if (!professional) {
-  return new Response(null, {
-    status: 404,
-    statusText: 'No encontrado'
-  });
+export function getStaticPaths() {
+  return [];
 }
 ---
 
-<Layout title={`Agendar con ${professional.displayName}`} professional={professional}>
-  <Scheduler
-    client:load
-    professional={{
-      id: professionalId!,
-      displayName: professional.displayName,
-      email: professional.email,
-      title: professional.title,
-      photoURL: professional.photoURL,
-      workSchedule: professional.workSchedule
-    }}
-    services={services}
-  />
+<Layout title="Agendar">
+  <AgendarPage client:load professionalId={professionalId} />
 </Layout>

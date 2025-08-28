@@ -70,19 +70,25 @@ export default function Scheduler({ professional, services }: Props) {
     setIsLoading(true);
     setAvailableSlots([]);
     setSelectedSlot(null);
+    const projectId = import.meta.env.PUBLIC_FIREBASE_PROJECT_ID;
     try {
-      const response = await fetch('/api/availability', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          date: selectedDay.toISOString(),
-          professionalId: professional.id,
-          serviceId: selectedService.id,
-        }),
-      });
+      const response = await fetch(
+        `https://us-central1-${projectId}.cloudfunctions.net/availability`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            data: {
+              date: selectedDay.toISOString().slice(0, 10),
+              professionalId: professional.id,
+              serviceId: selectedService.id,
+            },
+          }),
+        }
+      );
       if (!response.ok) throw new Error('Error al buscar disponibilidad');
-      const slots: string[] = await response.json();
-      setAvailableSlots(slots.map((slot) => new Date(slot)));
+      const { result } = await response.json();
+      setAvailableSlots(result.map((slot: string) => new Date(slot)));
     } catch (error) {
       console.error(error);
       setFetchError('No se pudo obtener la disponibilidad. Intenta nuevamente.');

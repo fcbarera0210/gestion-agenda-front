@@ -4,6 +4,7 @@ import {
   startOfWeek,
   addDays,
   addWeeks,
+  addMinutes,
   isSameDay,
   startOfDay,
   parseISO,
@@ -93,8 +94,11 @@ export default function Scheduler({ professional, services }: Props) {
       setAvailableSlots(
         Array.isArray(slots)
           ? slots
-              .map((slot: string) => parseISO(slot))
-              .filter((date) => isValid(date))
+              .map((slot: string) => {
+                const d = parseISO(slot);
+                return addMinutes(d, d.getTimezoneOffset());
+              })
+              .filter(isValid)
           : []
       );
     } catch (error) {

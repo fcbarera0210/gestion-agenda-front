@@ -18,6 +18,7 @@ import AppointmentSuccess from './AppointmentSuccess';
 import Stepper from './Stepper';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { createRipple, rippleClasses } from '../utils/ripple';
+import type { Professional } from '../types';
 
 // Tipos de datos
 interface Service {
@@ -25,15 +26,6 @@ interface Service {
   name: string;
   duration: number;
   price: number;
-}
-
-interface Professional {
-  id: string;
-  displayName: string;
-  email: string;
-  title: string;
-  photoURL?: string;
-  workSchedule?: Record<string, { isActive: boolean }>;
 }
 
 interface Props {
@@ -248,6 +240,7 @@ export default function Scheduler({ professional, services }: Props) {
           >
             <BookingForm
               professionalId={professional.id}
+              professional={professional}
               selectedService={selectedService}
               selectedSlot={selectedSlot}
               sessionType={sessionType}

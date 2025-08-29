@@ -4,6 +4,8 @@ import { functions } from '../firebase/client';
 import { useForm } from 'react-hook-form';
 import { FaUser, FaEnvelope, FaPhone, FaSpinner } from 'react-icons/fa';
 import { createRipple, rippleClasses } from '../utils/ripple';
+import type { Professional } from '../types';
+import RandomGradientAvatar from './common/Avatar/RandomGradientAvatar';
 
 interface Service {
   id: string;
@@ -20,6 +22,7 @@ interface BookingFormData {
 
 interface Props {
   professionalId: string | undefined;
+  professional: Professional;
   selectedService: Service;
   selectedSlot: Date;
   sessionType: 'presencial' | 'online';
@@ -28,7 +31,7 @@ interface Props {
 }
 
 // Form that submits client information to create a booking
-export default function BookingForm({ professionalId, selectedService, selectedSlot, sessionType, onBookingSuccess, onBack }: Props) {
+export default function BookingForm({ professionalId, professional, selectedService, selectedSlot, sessionType, onBookingSuccess, onBack }: Props) {
   const { register, handleSubmit, formState: { errors, isValid, isSubmitting }, setValue, getValues } = useForm<BookingFormData>({
     mode: 'onChange',
     defaultValues: {
@@ -103,14 +106,30 @@ export default function BookingForm({ professionalId, selectedService, selectedS
   };
 
   return (
-    <div className="mt-6 max-w-xl mx-auto">
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-foreground">Confirma tus datos</h2>
-        <p className="text-muted-foreground mt-1">
-          Revisa y completa tu información para confirmar la reserva.
-        </p>
-      </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <div className="mt-6 max-w-xl mx-auto bg-card border rounded-xl shadow-sm overflow-hidden">
+      <header className="bg-primary text-primary-foreground flex items-center gap-4 p-4 rounded-t-xl">
+        {professional.photoURL ? (
+          <img
+            src={professional.photoURL}
+            alt={`Foto de ${professional.displayName}`}
+            className="w-16 h-16 rounded-full object-cover"
+          />
+        ) : (
+          <RandomGradientAvatar alt={`Foto de ${professional.displayName}`} className="w-16 h-16" />
+        )}
+        <div>
+          <h2 className="text-lg font-bold">{professional.displayName}</h2>
+          {professional.title && <p className="text-sm">{professional.title}</p>}
+        </div>
+      </header>
+      <div className="p-6">
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-foreground">Confirma tus datos</h2>
+          <p className="text-muted-foreground mt-1">
+            Revisa y completa tu información para confirmar la reserva.
+          </p>
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
           <label htmlFor="clientEmail" className="text-sm font-medium text-foreground">Correo Electrónico</label>
           <p className="text-xs text-muted-foreground mt-1">Si ya has agendado previamente, al ingresar tu correo se completarán automáticamente tus datos.</p>
@@ -217,6 +236,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
         </div>
       </form>
     </div>
-  );
+  </div>
+);
 }
 

@@ -4,16 +4,19 @@ import { db } from '../firebase/client';
 import Scheduler from './Scheduler';
 import type { Professional, Service } from '../types';
 
-interface Props {
-  professionalId: string;
-}
-
-export default function AgendarPage({ professionalId }: Props) {
+export default function AgendarPage() {
+  const segments = window.location.pathname.split('/').filter(Boolean);
+  const professionalId = segments.length > 1 ? segments[1] : '';
   const [professional, setProfessional] = useState<Professional | null>(null);
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!professionalId) {
+      setLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
       try {
         const profSnap = await getDoc(doc(db, 'professionals', professionalId));
@@ -46,7 +49,7 @@ export default function AgendarPage({ professionalId }: Props) {
     return <p>Cargando...</p>;
   }
 
-  if (!professional) {
+  if (!professionalId || !professional) {
     return <p>No encontrado</p>;
   }
 

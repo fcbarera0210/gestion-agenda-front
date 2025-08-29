@@ -3,7 +3,8 @@ import { collection, getDocs } from 'firebase/firestore';
 import type { DocumentData } from 'firebase/firestore';
 import { db } from '../firebase/client';
 import ProfessionalCard from './ProfessionalCard';
-import { FiSearch, FiLoader } from 'react-icons/fi';
+import { FiSearch } from 'react-icons/fi';
+import Loader from './common/Loader';
 
 interface Professional {
   id: string;
@@ -58,10 +59,7 @@ export default function ProfessionalSearch() {
   return (
     <div className="space-y-6 text-left">
       {isLoading ? (
-        <div className="flex flex-col items-center gap-2 py-8">
-          <FiLoader className="h-6 w-6 animate-spin text-primary" />
-          <p className="text-center">Buscando datos de profesionales…</p>
-        </div>
+        <Loader message="Buscando profesionales…" />
       ) : (
         <>
           <div className="relative">

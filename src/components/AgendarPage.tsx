@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/client';
 import Scheduler from './Scheduler';
+import Loader from './common/Loader';
 import type { Professional, Service } from '../types';
 
 export default function AgendarPage() {
@@ -46,7 +47,7 @@ export default function AgendarPage() {
   }, [professionalId]);
 
   if (loading) {
-    return <p>Cargando...</p>;
+    return <Loader message="Preparando tu formulario…" />;
   }
 
   if (!professionalId || !professional) {

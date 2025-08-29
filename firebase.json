@@ -6,6 +6,9 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      { "source": "/agendar/**", "destination": "/agendar/index.html" }
     ]
   }
 }

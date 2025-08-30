@@ -335,7 +335,7 @@ export default function Scheduler({ professional, services }: Props) {
                     </span>
                   ))}
                 </div>
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden h-9">
                   <AnimatePresence initial={false} custom={weekDirection}>
                     <motion.div
                       key={format(currentWeek, 'yyyy-MM-dd')}
@@ -345,7 +345,7 @@ export default function Scheduler({ professional, services }: Props) {
                       animate={shouldReduceMotion ? {} : 'center'}
                       exit={shouldReduceMotion ? {} : 'exit'}
                       transition={{ duration: 0.3 }}
-                      className="grid grid-cols-7 gap-1 w-full"
+                      className="absolute top-0 left-0 grid grid-cols-7 gap-1 w-full"
                     >
                       {Array.from({ length: 7 }).map((_, i) => {
                         const day = addDays(currentWeek, i);

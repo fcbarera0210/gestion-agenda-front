@@ -103,6 +103,34 @@ export default function Scheduler({ professional, services }: Props) {
     }
   };
 
+  const findFirstAvailableWeek = async () => {
+    if (!selectedService) return null;
+    const callable = httpsCallable(functions, 'availability');
+    let weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    for (let w = 0; w < 12; w++) {
+      for (let d = 0; d < 7; d++) {
+        const day = addDays(weekStart, d);
+        const dayName = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][day.getDay()];
+        const isActive = professional.workSchedule?.[dayName]?.isActive;
+        if (day < today || !isActive) continue;
+        try {
+          const { data: slots } = await callable({
+            date: day.toISOString().slice(0, 10),
+            professionalId: professional.id,
+            serviceId: selectedService.id,
+          });
+          if (Array.isArray(slots) && slots.length > 0) {
+            return weekStart;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      weekStart = addWeeks(weekStart, 1);
+    }
+    return null;
+  };
+
   // Buscar disponibilidad cuando cambia día o servicio
   useEffect(() => {
     if (!selectedDay || !selectedService) {
@@ -111,6 +139,17 @@ export default function Scheduler({ professional, services }: Props) {
     }
     fetchAvailability();
   }, [selectedDay, selectedService, professional.id]);
+
+  useEffect(() => {
+    if (!selectedService) return;
+    const seekWeek = async () => {
+      const week = await findFirstAvailableWeek();
+      if (week) {
+        setCurrentWeek(week);
+      }
+    };
+    seekWeek();
+  }, [selectedService, professional.id]);
 
   // Manejadores
   const handleSelectService = (service: Service | null) => {

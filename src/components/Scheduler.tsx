@@ -179,8 +179,8 @@ export default function Scheduler({ professional, services }: Props) {
   }
 
   return (
-    <div className="mt-6 min-h-screen w-full bg-card md:max-w-xl md:mx-auto md:border md:rounded-xl md:shadow-sm md:overflow-hidden">
-      <header className="bg-primary text-primary-foreground flex items-center justify-between gap-4 p-4 rounded-t-xl">
+    <div className="mt-6 min-h-screen w-full md:max-w-xl md:mx-auto md:bg-card md:border md:rounded-xl md:shadow-sm md:overflow-hidden">
+      <header className="bg-primary text-primary-foreground flex items-center justify-between gap-4 p-4 md:rounded-t-xl">
         <div className="flex items-center gap-4">
           {professional.photoURL ? (
             <img

@@ -303,31 +303,31 @@ export default function Scheduler({ professional, services }: Props) {
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">Selecciona un día</h3>
-                <div className="flex items-center justify-between mb-3 w-full">
-                  <button
-                    onClick={(e) => {
-                      createRipple(e);
-                      changeWeek(-1);
-                    }}
-                    className={`${rippleClasses} p-1 text-primary rounded hover:bg-muted cursor-pointer`}
-                    aria-label="Semana anterior"
-                  >
-                    ‹
-                  </button>
-                  <span className="text-sm font-medium capitalize">
-                    {format(currentWeek, 'MMMM yyyy', { locale: es })}
-                  </span>
-                  <button
-                    onClick={(e) => {
-                      createRipple(e);
-                      changeWeek(1);
-                    }}
-                    className={`${rippleClasses} p-1 text-primary rounded hover:bg-muted cursor-pointer`}
-                    aria-label="Semana siguiente"
-                  >
-                    ›
-                  </button>
-                </div>
+                  <div className="flex items-center justify-between mb-3 w-full">
+                    <button
+                      onClick={(e) => {
+                        createRipple(e);
+                        changeWeek(-1);
+                      }}
+                      className={`${rippleClasses} h-9 w-9 flex items-center justify-center rounded-lg border text-primary text-xl hover:bg-muted cursor-pointer`}
+                      aria-label="Semana anterior"
+                    >
+                      ‹
+                    </button>
+                    <span className="text-sm font-medium capitalize">
+                      {format(currentWeek, 'MMMM yyyy', { locale: es })}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        createRipple(e);
+                        changeWeek(1);
+                      }}
+                      className={`${rippleClasses} h-9 w-9 flex items-center justify-center rounded-lg border text-primary text-xl hover:bg-muted cursor-pointer`}
+                      aria-label="Semana siguiente"
+                    >
+                      ›
+                    </button>
+                  </div>
                 <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground mb-2 w-full">
                   {weekdays.map((d) => (
                     <span key={d} className="capitalize">

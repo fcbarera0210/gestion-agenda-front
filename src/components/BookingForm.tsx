@@ -103,7 +103,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
   };
 
   return (
-    <div className="mt-6 max-w-xl mx-auto">
+    <>
       <div className="mb-6">
         <h2 className="text-xl font-bold text-foreground">Confirma tus datos</h2>
         <p className="text-muted-foreground mt-1">
@@ -216,7 +216,7 @@ export default function BookingForm({ professionalId, selectedService, selectedS
           </button>
         </div>
       </form>
-    </div>
+    </>
   );
 }
 

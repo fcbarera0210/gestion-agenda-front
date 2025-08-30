@@ -36,7 +36,7 @@ export default function AppointmentSuccess({
 }: Props) {
   const shouldReduceMotion = useReducedMotion();
   return (
-    <div className="w-full md:flex md:justify-center">
+    <div className="min-h-screen flex flex-col justify-center items-center text-center">
       <motion.div
         className="w-full text-center bg-card p-8 md:max-w-md md:rounded-xl md:border md:shadow-sm"
         initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.95 }}
@@ -77,6 +77,20 @@ export default function AppointmentSuccess({
           >
             Volver al inicio
           </button>
+        </div>
+        <div className="mt-8 flex gap-4 justify-center text-sm text-muted-foreground">
+          <a
+            href="#"
+            className="hover:text-primary hover:underline"
+          >
+            Síguenos en Instagram
+          </a>
+          <a
+            href="#"
+            className="hover:text-primary hover:underline"
+          >
+            Visita nuestro blog
+          </a>
         </div>
       </motion.div>
     </div>

@@ -19,6 +19,8 @@ import Stepper from './Stepper';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { createRipple, rippleClasses } from '../utils/ripple';
 import type { Professional } from '../types';
+import RandomGradientAvatar from './common/Avatar/RandomGradientAvatar';
+import ThemeToggle from './common/ThemeToggle';
 
 // Tipos de datos
 interface Service {
@@ -177,9 +179,28 @@ export default function Scheduler({ professional, services }: Props) {
   }
 
   return (
-    <div className="w-full">
-      <Stepper steps={steps} currentStep={currentStep} />
-      <AnimatePresence mode="wait">
+    <div className="mt-6 max-w-xl mx-auto bg-card border rounded-xl shadow-sm overflow-hidden">
+      <header className="bg-primary text-primary-foreground flex items-center justify-between gap-4 p-4 rounded-t-xl">
+        <div className="flex items-center gap-4">
+          {professional.photoURL ? (
+            <img
+              src={professional.photoURL}
+              alt={`Foto de ${professional.displayName}`}
+              className="w-16 h-16 rounded-full object-cover"
+            />
+          ) : (
+            <RandomGradientAvatar alt={`Foto de ${professional.displayName}`} className="w-16 h-16" />
+          )}
+          <div>
+            <h2 className="text-lg font-bold">{professional.displayName}</h2>
+            {professional.title && <p className="text-sm">{professional.title}</p>}
+          </div>
+        </div>
+        <ThemeToggle />
+      </header>
+      <div className="p-6">
+        <Stepper steps={steps} currentStep={currentStep} />
+        <AnimatePresence mode="wait">
         {!selectedService ? (
           <motion.div
             key="select-service"
@@ -240,7 +261,6 @@ export default function Scheduler({ professional, services }: Props) {
           >
             <BookingForm
               professionalId={professional.id}
-              professional={professional}
               selectedService={selectedService}
               selectedSlot={selectedSlot}
               sessionType={sessionType}
@@ -465,6 +485,7 @@ export default function Scheduler({ professional, services }: Props) {
         )}
       </AnimatePresence>
     </div>
+  </div>
   );
 }
 

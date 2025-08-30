@@ -17,11 +17,12 @@ export default function ThemeToggle() {
   return (
     <button
       type="button"
-      aria-label="Cambiar tema"
-      className="p-0 bg-transparent border-0"
+      aria-label="Cambiar modo"
+      title="Cambiar modo"
+      className="p-2 rounded-full border bg-card hover:bg-muted"
       onClick={toggleTheme}
     >
-      <span>{isDark ? '🌞' : '🌙'}</span>
+      <span className="text-foreground">{isDark ? '🌞' : '🌙'}</span>
     </button>
   );
 }

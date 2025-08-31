@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import type { DocumentData } from 'firebase/firestore';
 import { db } from '../firebase/client';
@@ -21,6 +21,7 @@ export default function ProfessionalSearch() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchProfessionals = async () => {
@@ -58,13 +59,7 @@ export default function ProfessionalSearch() {
     : [];
 
   return (
-    <div
-      className={`space-y-6 text-left ${
-        isFocused
-          ? 'fixed inset-0 top-0 p-4 bg-background overflow-y-auto z-50'
-          : ''
-      }`}
-    >
+    <div ref={containerRef} className="space-y-6 text-left">
       {isLoading ? (
         <Loader message="Buscando profesionales…" />
       ) : (
@@ -76,7 +71,10 @@ export default function ProfessionalSearch() {
               placeholder="Buscar profesional por nombre o email"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => setIsFocused(true)}
+              onFocus={() => {
+                setIsFocused(true);
+                containerRef.current?.scrollIntoView({ behavior: 'smooth' });
+              }}
               onBlur={() => setIsFocused(false)}
               className="w-full p-2 pl-8 border rounded-lg bg-background text-foreground placeholder:text-muted-foreground"
             />

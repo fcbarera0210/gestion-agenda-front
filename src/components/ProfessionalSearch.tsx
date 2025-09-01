@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import type { DocumentData } from 'firebase/firestore';
 import { db } from '../firebase/client';
@@ -20,6 +20,8 @@ export default function ProfessionalSearch() {
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchProfessionals = async () => {
@@ -57,7 +59,7 @@ export default function ProfessionalSearch() {
     : [];
 
   return (
-    <div className="space-y-6 text-left">
+    <div ref={containerRef} className="space-y-6 text-left">
       {isLoading ? (
         <Loader message="Buscando profesionales…" />
       ) : (
@@ -69,10 +71,19 @@ export default function ProfessionalSearch() {
               placeholder="Buscar profesional por nombre o email"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => {
+                setIsFocused(true);
+                containerRef.current?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              onBlur={() => setIsFocused(false)}
               className="w-full p-2 pl-8 border rounded-lg bg-background text-foreground placeholder:text-muted-foreground"
             />
           </div>
-          <div className="flex flex-col gap-4">
+          <div
+            className={`flex flex-col gap-4 ${
+              isFocused ? 'max-h-[calc(100vh-4rem)] overflow-y-auto' : ''
+            }`}
+          >
             {error ? (
               <p className="py-8 text-center">{error}</p>
             ) : (

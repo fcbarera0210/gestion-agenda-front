@@ -103,6 +103,34 @@ export default function Scheduler({ professional, services }: Props) {
     }
   };
 
+  const findFirstAvailableWeek = async () => {
+    if (!selectedService) return null;
+    const callable = httpsCallable(functions, 'availability');
+    let weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    for (let w = 0; w < 12; w++) {
+      for (let d = 0; d < 7; d++) {
+        const day = addDays(weekStart, d);
+        const dayName = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][day.getDay()];
+        const isActive = professional.workSchedule?.[dayName]?.isActive;
+        if (day < today || !isActive) continue;
+        try {
+          const { data: slots } = await callable({
+            date: day.toISOString().slice(0, 10),
+            professionalId: professional.id,
+            serviceId: selectedService.id,
+          });
+          if (Array.isArray(slots) && slots.length > 0) {
+            return weekStart;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      weekStart = addWeeks(weekStart, 1);
+    }
+    return null;
+  };
+
   // Buscar disponibilidad cuando cambia día o servicio
   useEffect(() => {
     if (!selectedDay || !selectedService) {
@@ -111,6 +139,17 @@ export default function Scheduler({ professional, services }: Props) {
     }
     fetchAvailability();
   }, [selectedDay, selectedService, professional.id]);
+
+  useEffect(() => {
+    if (!selectedService) return;
+    const seekWeek = async () => {
+      const week = await findFirstAvailableWeek();
+      if (week) {
+        setCurrentWeek(week);
+      }
+    };
+    seekWeek();
+  }, [selectedService, professional.id]);
 
   // Manejadores
   const handleSelectService = (service: Service | null) => {
@@ -179,8 +218,8 @@ export default function Scheduler({ professional, services }: Props) {
   }
 
   return (
-    <div className="mt-6 max-w-xl mx-auto bg-card border rounded-xl shadow-sm overflow-hidden">
-      <header className="bg-primary text-primary-foreground flex items-center justify-between gap-4 p-4 rounded-t-xl">
+    <div className="min-h-screen w-full md:mt-6 md:max-w-xl md:mx-auto md:bg-card md:border md:rounded-xl md:shadow-sm md:overflow-hidden">
+      <header className="bg-primary text-primary-foreground flex items-center justify-between gap-4 p-4 md:rounded-t-xl">
         <div className="flex items-center gap-4">
           {professional.photoURL ? (
             <img
@@ -303,31 +342,31 @@ export default function Scheduler({ professional, services }: Props) {
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">Selecciona un día</h3>
-                <div className="flex items-center justify-between mb-3 w-full">
-                  <button
-                    onClick={(e) => {
-                      createRipple(e);
-                      changeWeek(-1);
-                    }}
-                    className={`${rippleClasses} p-1 text-primary rounded hover:bg-muted cursor-pointer`}
-                    aria-label="Semana anterior"
-                  >
-                    ‹
-                  </button>
-                  <span className="text-sm font-medium capitalize">
-                    {format(currentWeek, 'MMMM yyyy', { locale: es })}
-                  </span>
-                  <button
-                    onClick={(e) => {
-                      createRipple(e);
-                      changeWeek(1);
-                    }}
-                    className={`${rippleClasses} p-1 text-primary rounded hover:bg-muted cursor-pointer`}
-                    aria-label="Semana siguiente"
-                  >
-                    ›
-                  </button>
-                </div>
+                  <div className="flex items-center justify-between mb-3 w-full">
+                    <button
+                      onClick={(e) => {
+                        createRipple(e);
+                        changeWeek(-1);
+                      }}
+                      className={`${rippleClasses} h-9 w-9 flex items-center justify-center rounded-lg border text-primary text-xl hover:bg-muted cursor-pointer`}
+                      aria-label="Semana anterior"
+                    >
+                      ‹
+                    </button>
+                    <span className="text-sm font-medium capitalize">
+                      {format(currentWeek, 'MMMM yyyy', { locale: es })}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        createRipple(e);
+                        changeWeek(1);
+                      }}
+                      className={`${rippleClasses} h-9 w-9 flex items-center justify-center rounded-lg border text-primary text-xl hover:bg-muted cursor-pointer`}
+                      aria-label="Semana siguiente"
+                    >
+                      ›
+                    </button>
+                  </div>
                 <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground mb-2 w-full">
                   {weekdays.map((d) => (
                     <span key={d} className="capitalize">
@@ -335,7 +374,7 @@ export default function Scheduler({ professional, services }: Props) {
                     </span>
                   ))}
                 </div>
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden h-9">
                   <AnimatePresence initial={false} custom={weekDirection}>
                     <motion.div
                       key={format(currentWeek, 'yyyy-MM-dd')}
@@ -345,7 +384,7 @@ export default function Scheduler({ professional, services }: Props) {
                       animate={shouldReduceMotion ? {} : 'center'}
                       exit={shouldReduceMotion ? {} : 'exit'}
                       transition={{ duration: 0.3 }}
-                      className="grid grid-cols-7 gap-1 w-full"
+                      className="absolute top-0 left-0 grid grid-cols-7 gap-1 w-full"
                     >
                       {Array.from({ length: 7 }).map((_, i) => {
                         const day = addDays(currentWeek, i);

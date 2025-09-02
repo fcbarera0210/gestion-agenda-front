@@ -20,7 +20,6 @@ export default function ProfessionalSearch() {
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -72,18 +71,12 @@ export default function ProfessionalSearch() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onFocus={() => {
-                setIsFocused(true);
                 containerRef.current?.scrollIntoView({ behavior: 'smooth' });
               }}
-              onBlur={() => setIsFocused(false)}
               className="w-full p-2 pl-8 border rounded-lg bg-background text-foreground placeholder:text-muted-foreground"
             />
           </div>
-          <div
-            className={`flex flex-col gap-4 ${
-              isFocused ? 'max-h-[calc(100vh-4rem)] overflow-y-auto' : ''
-            }`}
-          >
+          <div className="flex flex-col gap-4 overflow-visible">
             {error ? (
               <p className="py-8 text-center">{error}</p>
             ) : (
